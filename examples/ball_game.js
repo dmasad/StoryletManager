@@ -1,10 +1,5 @@
-
-
-
 // Set up narrative model
 // -----------------------------------------------------------------------
-
-
 
 // Set up NPCs
 // ------------------------------------------
@@ -44,8 +39,10 @@ for (let id=0; id<nChars; id++) {
 
 // Set up storylets themselves
 // ------------------------------------------
-NarrativeManager.storyletMakers = {
-	"Dance": function() {
+NarrativeManager.storylets["Dance"] = {
+	name: "Dance",
+	tags: ["interaction"],
+	generate: function() {
 		let storylets = [];
 		if (State.variables.location != "Ballroom") return storylets;
 		for (let id in State.variables.characters) {
@@ -61,8 +58,14 @@ NarrativeManager.storyletMakers = {
 			}
 		}
 		return storylets;
-	},
-	"Conversation": function() {
+	}
+};
+
+
+NarrativeManager.storylets["Conversation"] = {
+	name: "Conversation",
+	tags: ["interaction"],
+	generate: function() {
 		let storylets = [];
 		if (State.variables.location != "Library") return storylets;
 		for (let id in State.variables.characters) {
@@ -78,5 +81,5 @@ NarrativeManager.storyletMakers = {
 			}
 		}
 		return storylets;
-	},
-}
+	}
+};

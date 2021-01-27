@@ -6,11 +6,13 @@ var randomChoice = function(vals) {
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
-var NarrativeManager = {meta: []};
+var NarrativeManager = {};
+NarrativeManager.storylets = {};
+
 NarrativeManager.getAllStorylets = function() {
 	let allStorylets = [];
-	for (let key in this.storyletMakers) {
-		let storylets = this.storyletMakers[key]();
+	for (let key in this.storylets) {
+		let storylets = this.storylets[key].generate();
 		for (let i in storylets) allStorylets.push(storylets[i]);
 	}
 	return allStorylets;

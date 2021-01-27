@@ -100,9 +100,7 @@ var saveAs=saveAs||navigator.msSaveBlob&&navigator.msSaveBlob.bind(navigator)||f
 		<div id="init-lacking">Your browser lacks required capabilities. Please upgrade it or switch to another to continue.</div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://E9DEA250-BBFD-4C92-8E8C-53212FBB2083// --><tw-storydata name="Pansexual Space Regency Party (working title)" startnode="1" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="E9DEA250-BBFD-4C92-8E8C-53212FBB2083" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "Story JavaScript" */
-Config.passages.nobr = true; // Deal with linebreaks.
-/* twine-user-script #2: "storymanager.js" */
+	<!-- UUID://E9DEA250-BBFD-4C92-8E8C-53212FBB2083// --><tw-storydata name="Pansexual Space Regency Party (working title)" startnode="1" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="E9DEA250-BBFD-4C92-8E8C-53212FBB2083" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
 
 // Choose one of an array
 var randomChoice = function(vals) {
@@ -111,11 +109,13 @@ var randomChoice = function(vals) {
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
-var NarrativeManager = {meta: []};
+var NarrativeManager = {};
+NarrativeManager.storylets = {};
+
 NarrativeManager.getAllStorylets = function() {
 	let allStorylets = [];
-	for (let key in this.storyletMakers) {
-		let storylets = this.storyletMakers[key]();
+	for (let key in this.storylets) {
+		let storylets = this.storylets[key].generate();
 		for (let i in storylets) allStorylets.push(storylets[i]);
 	}
 	return allStorylets;
@@ -146,14 +146,9 @@ NarrativeManager.getNStorylets = function(n) {
 }
 
 window.NM = NarrativeManager;
-/* twine-user-script #3: "ball_game.js" */
-
-
-
+/* twine-user-script #2: "ball_game.js" */
 // Set up narrative model
 // -----------------------------------------------------------------------
-
-
 
 // Set up NPCs
 // ------------------------------------------
@@ -193,8 +188,10 @@ for (let id=0; id<nChars; id++) {
 
 // Set up storylets themselves
 // ------------------------------------------
-NarrativeManager.storyletMakers = {
-	"Dance": function() {
+NarrativeManager.storylets["Dance"] = {
+	name: "Dance",
+	tags: ["interaction"],
+	generate: function() {
 		let storylets = [];
 		if (State.variables.location != "Ballroom") return storylets;
 		for (let id in State.variables.characters) {
@@ -210,26 +207,33 @@ NarrativeManager.storyletMakers = {
 			}
 		}
 		return storylets;
-	},
-	"Conversation": function() {
-		let storylets = [];
-		if (State.variables.location != "Library") return storylets;
-		for (let id in State.variables.characters) {
-			let char = State.variables.characters[id];
-			if (char.friendship >= 0) {
-				let storylet = {
-					passage: "ConversationRoot",
-					description: "Talk with " + char.firstname + " " + char.lastname,
-					priority: 0,
-					payload: {character: char}
-				}
-				storylets.push(storylet);
+	}
+};
+
+
+NarrativeManager.storylets["Conversation"] = {
+name: "Conversation",
+tags: ["interaction"],
+generate: function() {
+	let storylets = [];
+	if (State.variables.location != "Library") return storylets;
+	for (let id in State.variables.characters) {
+		let char = State.variables.characters[id];
+		if (char.friendship >= 0) {
+			let storylet = {
+				passage: "ConversationRoot",
+				description: "Talk with " + char.firstname + " " + char.lastname,
+				priority: 0,
+				payload: {character: char}
 			}
+			storylets.push(storylet);
 		}
-		return storylets;
-	},
-}
-</script><tw-passagedata pid="1" name="Start" tags="" position="100,100" size="100,100">&lt;&lt;set $poetry = 0&gt;&gt;
+	}
+	return storylets;
+	}
+};
+/* twine-user-script #3: "Story JavaScript" */
+Config.passages.nobr = true; // Deal with linebreaks.</script><tw-passagedata pid="1" name="Start" tags="" position="100,100" size="100,100">&lt;&lt;set $poetry = 0&gt;&gt;
 &lt;&lt;set $gossip = 0&gt;&gt;
 You can go to the [[Ballroom]] or the [[Library]].</tw-passagedata><tw-passagedata pid="2" name="Ballroom" tags="" position="225,100" size="100,100">&lt;&lt;set $location = &quot;Ballroom&quot;&gt;&gt;
 You&#39;re in the ballroom.&lt;br&gt;
