@@ -1,0 +1,115 @@
+:: StoryTitle
+Pansexual Space Regency Party (working title)
+
+:: StoryData
+{
+	"ifid": "E9DEA250-BBFD-4C92-8E8C-53212FBB2083"
+}
+
+:: Story JavaScript [script]
+Config.passages.nobr = true; // Deal with linebreaks.
+
+:: Start
+<<set $poetry = 0>>
+<<set $gossip = 0>>
+You can go to the [[Ballroom]] or the [[Library]].
+
+:: Ballroom
+<<set $location = "Ballroom">>
+You're in the ballroom.<br>
+<<set _possibleStories = window.NM.getNStorylets(3)>>
+<<for _story range _possibleStories>>
+	<<capture _story>>
+	[[_story.description|_story.passage][$payload=_story.payload]]<br>
+	<</capture>>
+<</for>>
+Or you can go to the [[Library]]
+
+
+:: DancingRoot
+<<set $partner = $payload["character"]>>
+You take <<print $partner.firstname>>'s hand and step onto the dance floor. As you dance, you can
+talk about [[poetry|Conversation-Poetry-Dancing]], [[trade gossip|Conversation-Gossip]], the latest 
+[[current events|Conversation-Politics-Dancing]] -- or you can [[dance in silence|Dance-Quietly]].<br>
+
+
+:: Conversation-Poetry-Dancing
+<<if $poetry > $partner.poetry>>
+(Poetry success) 
+<<elseif $poetry <= $partner.poetry>>
+(Poetry fail)
+<<if random(100) < 50>>
+(Poetry up)
+<<set $poetry = $poetry + 1>>
+<</if>>
+<</if>>
+<br>
+[[Return | Ballroom]]
+
+:: Conversation-Politics-Dancing
+(This is inappropriate to do while dancing)
+<<set $characters[$partner.id].romance = $partner.romance - 1>>
+[[Return | Ballroom]]
+
+:: Dance-Quietly
+(Dance quietly, some chance of improving romance goes here)
+[[Return | Ballroom]]
+
+:: Conversation-Gossip
+<<if $gossip > $partner.gossip>>
+"I heard-" you begin archy, and are able to share some juicy gossip you heard earlier, earning a smile. 
+<<elseif $gossip <= $partner.gossip>>
+You bring up a rumor you read earlier, but you can see it's old news already. 
+<<if random(100) < 50>>
+Fortunately, they reply with a rumor of their own -- one you haven't heard yet.
+<<set $gossip = $gossip + 1>>
+<</if>>
+<</if>>
+<br>
+<<if $location == "Ballroom">>
+[[Return | Ballroom]]
+<<elseif $location == "Library">>
+[[Return | Library]]
+<</if>>
+
+:: Library
+<<set $location = "Library">>
+You're in the library.<br>
+<<set _possibleStories = window.NM.getNStorylets(3)>>
+<<for _story range _possibleStories>>
+	<<capture _story>>
+	[[_story.description|_story.passage][$payload=_story.payload]]<br>
+	<</capture>>
+<</for>>
+Or you can go to the [[Ballroom]]
+
+:: ConversationRoot
+<<set $partner = $payload["character"]>>
+You talk to $partner.firstname in the library. You can talk about [[poetry|Conversation-Poetry-Talking]], [[trade gossip|Conversation-Gossip]], or the latest 
+[[current events|Conversation-Politics-Talking]].<br>
+
+
+:: Conversation-Poetry-Talking
+<<if $poetry > $partner.poetry>>
+(Poetry success) 
+<<elseif $poetry <= $partner.poetry>>
+(Poetry fail)
+<<if random(100) < 50>>
+(Poetry up)
+<<set $poetry = $poetry + 1>>
+<</if>>
+<</if>>
+<br>
+[[Return | Library]]
+
+
+:: Conversation-Politics-Talking
+<<if random(0, 100) < 50>>
+<<set $characters[$partner.id].friendship = $partner.friendship + 1>>
+(Politics conversation success)
+<<else>>
+<<set $characters[$partner.id].friendship = $partner.friendship - 1>>
+(Politics conversation failure)
+<</if>>
+[[Return | Library]]
+
