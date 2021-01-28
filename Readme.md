@@ -3,6 +3,8 @@
 A lightweight storylet manager for Twee and Sugarcube.
 
 
+
+
 ## Feature list
 
 - [X] Generating potential storylets based on state
@@ -12,5 +14,5 @@ A lightweight storylet manager for Twee and Sugarcube.
   - [ ]  Storylets bound to specific data
   - [ ]  Storylet with any binding
 - [ ] Storylet tagging and filtering (i.e. pull from only a subset of storylets)
-- [ ] Macro / widget for displaying storylet links
-- [ ] 
+- [X] Widget for displaying storylet links
+  - [ ] Make the widget into a macro

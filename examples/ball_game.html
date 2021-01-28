@@ -100,7 +100,7 @@ var saveAs=saveAs||navigator.msSaveBlob&&navigator.msSaveBlob.bind(navigator)||f
 		<div id="init-lacking">Your browser lacks required capabilities. Please upgrade it or switch to another to continue.</div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://E9DEA250-BBFD-4C92-8E8C-53212FBB2083// --><tw-storydata name="Pansexual Space Regency Party (working title)" startnode="1" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="E9DEA250-BBFD-4C92-8E8C-53212FBB2083" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
+	<!-- UUID://E9DEA250-BBFD-4C92-8E8C-53212FBB2083// --><tw-storydata name="Pansexual Space Regency Party (working title)" startnode="2" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="E9DEA250-BBFD-4C92-8E8C-53212FBB2083" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
 
 // Choose one of an array
 var randomChoice = function(vals) {
@@ -212,41 +212,43 @@ NarrativeManager.storylets["Dance"] = {
 
 
 NarrativeManager.storylets["Conversation"] = {
-name: "Conversation",
-tags: ["interaction"],
-generate: function() {
-	let storylets = [];
-	if (State.variables.location != "Library") return storylets;
-	for (let id in State.variables.characters) {
-		let char = State.variables.characters[id];
-		if (char.friendship >= 0) {
-			let storylet = {
-				passage: "ConversationRoot",
-				description: "Talk with " + char.firstname + " " + char.lastname,
-				priority: 0,
-				payload: {character: char}
+	name: "Conversation",
+	tags: ["interaction"],
+	generate: function() {
+		let storylets = [];
+		if (State.variables.location != "Library") return storylets;
+		for (let id in State.variables.characters) {
+			let char = State.variables.characters[id];
+			if (char.friendship >= 0) {
+				let storylet = {
+					passage: "ConversationRoot",
+					description: "Talk with " + char.firstname + " " + char.lastname,
+					priority: 0,
+					payload: {character: char}
+				}
+				storylets.push(storylet);
 			}
-			storylets.push(storylet);
 		}
-	}
-	return storylets;
+		return storylets;
 	}
 };
 /* twine-user-script #3: "Story JavaScript" */
-Config.passages.nobr = true; // Deal with linebreaks.</script><tw-passagedata pid="1" name="Start" tags="" position="100,100" size="100,100">&lt;&lt;set $poetry = 0&gt;&gt;
+Config.passages.nobr = true; // Deal with linebreaks.</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStorylets&gt;&gt;
+    &lt;&lt;for _storylet range $args[0]&gt;&gt;
+        &lt;&lt;capture _storylet&gt;&gt;
+        [[_storylet.description|_storylet.passage][$payload=_storylet.payload]]&lt;br&gt;
+        &lt;&lt;/capture&gt;&gt;
+    &lt;&lt;/for&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">&lt;&lt;set $poetry = 0&gt;&gt;
 &lt;&lt;set $gossip = 0&gt;&gt;
-You can go to the [[Ballroom]] or the [[Library]].</tw-passagedata><tw-passagedata pid="2" name="Ballroom" tags="" position="225,100" size="100,100">&lt;&lt;set $location = &quot;Ballroom&quot;&gt;&gt;
+You can go to the [[Ballroom]] or the [[Library]].</tw-passagedata><tw-passagedata pid="3" name="Ballroom" tags="" position="350,100" size="100,100">&lt;&lt;set $location = &quot;Ballroom&quot;&gt;&gt;
 You&#39;re in the ballroom.&lt;br&gt;
 &lt;&lt;set _possibleStories = window.NM.getNStorylets(3)&gt;&gt;
-&lt;&lt;for _story range _possibleStories&gt;&gt;
-	&lt;&lt;capture _story&gt;&gt;
-	[[_story.description|_story.passage][$payload=_story.payload]]&lt;br&gt;
-	&lt;&lt;/capture&gt;&gt;
-&lt;&lt;/for&gt;&gt;
-Or you can go to the [[Library]]</tw-passagedata><tw-passagedata pid="3" name="DancingRoot" tags="" position="350,100" size="100,100">&lt;&lt;set $partner = $payload[&quot;character&quot;]&gt;&gt;
+&lt;&lt;ShowStorylets _possibleStories&gt;&gt;
+Or you can go to the [[Library]]</tw-passagedata><tw-passagedata pid="4" name="DancingRoot" tags="" position="475,100" size="100,100">&lt;&lt;set $partner = $payload[&quot;character&quot;]&gt;&gt;
 You take &lt;&lt;print $partner.firstname&gt;&gt;&#39;s hand and step onto the dance floor. As you dance, you can
 talk about [[poetry|Conversation-Poetry-Dancing]], [[trade gossip|Conversation-Gossip]], the latest 
-[[current events|Conversation-Politics-Dancing]] -- or you can [[dance in silence|Dance-Quietly]].&lt;br&gt;</tw-passagedata><tw-passagedata pid="4" name="Conversation-Poetry-Dancing" tags="" position="475,100" size="100,100">&lt;&lt;if $poetry &gt; $partner.poetry&gt;&gt;
+[[current events|Conversation-Politics-Dancing]] -- or you can [[dance in silence|Dance-Quietly]].&lt;br&gt;</tw-passagedata><tw-passagedata pid="5" name="Conversation-Poetry-Dancing" tags="" position="600,100" size="100,100">&lt;&lt;if $poetry &gt; $partner.poetry&gt;&gt;
 (Poetry success) 
 &lt;&lt;elseif $poetry &lt;= $partner.poetry&gt;&gt;
 (Poetry fail)
@@ -256,10 +258,10 @@ talk about [[poetry|Conversation-Poetry-Dancing]], [[trade gossip|Conversation-G
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;br&gt;
-[[Return | Ballroom]]</tw-passagedata><tw-passagedata pid="5" name="Conversation-Politics-Dancing" tags="" position="600,100" size="100,100">(This is inappropriate to do while dancing)
+[[Return | Ballroom]]</tw-passagedata><tw-passagedata pid="6" name="Conversation-Politics-Dancing" tags="" position="725,100" size="100,100">(This is inappropriate to do while dancing)
 &lt;&lt;set $characters[$partner.id].romance = $partner.romance - 1&gt;&gt;
-[[Return | Ballroom]]</tw-passagedata><tw-passagedata pid="6" name="Dance-Quietly" tags="" position="725,100" size="100,100">(Dance quietly, some chance of improving romance goes here)
-[[Return | Ballroom]]</tw-passagedata><tw-passagedata pid="7" name="Conversation-Gossip" tags="" position="850,100" size="100,100">&lt;&lt;if $gossip &gt; $partner.gossip&gt;&gt;
+[[Return | Ballroom]]</tw-passagedata><tw-passagedata pid="7" name="Dance-Quietly" tags="" position="850,100" size="100,100">(Dance quietly, some chance of improving romance goes here)
+[[Return | Ballroom]]</tw-passagedata><tw-passagedata pid="8" name="Conversation-Gossip" tags="" position="975,100" size="100,100">&lt;&lt;if $gossip &gt; $partner.gossip&gt;&gt;
 &quot;I heard-&quot; you begin archy, and are able to share some juicy gossip you heard earlier, earning a smile. 
 &lt;&lt;elseif $gossip &lt;= $partner.gossip&gt;&gt;
 You bring up a rumor you read earlier, but you can see it&#39;s old news already. 
@@ -273,17 +275,14 @@ Fortunately, they reply with a rumor of their own -- one you haven&#39;t heard y
 [[Return | Ballroom]]
 &lt;&lt;elseif $location == &quot;Library&quot;&gt;&gt;
 [[Return | Library]]
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Library" tags="" position="975,100" size="100,100">&lt;&lt;set $location = &quot;Library&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="Library" tags="" position="1100,100" size="100,100">&lt;&lt;set $location = &quot;Library&quot;&gt;&gt;
 You&#39;re in the library.&lt;br&gt;
 &lt;&lt;set _possibleStories = window.NM.getNStorylets(3)&gt;&gt;
-&lt;&lt;for _story range _possibleStories&gt;&gt;
-	&lt;&lt;capture _story&gt;&gt;
-	[[_story.description|_story.passage][$payload=_story.payload]]&lt;br&gt;
-	&lt;&lt;/capture&gt;&gt;
-&lt;&lt;/for&gt;&gt;
-Or you can go to the [[Ballroom]]</tw-passagedata><tw-passagedata pid="9" name="ConversationRoot" tags="" position="1100,100" size="100,100">&lt;&lt;set $partner = $payload[&quot;character&quot;]&gt;&gt;
+&lt;&lt;ShowStorylets _possibleStories&gt;&gt;
+
+Or you can go to the [[Ballroom]]</tw-passagedata><tw-passagedata pid="10" name="ConversationRoot" tags="" position="1225,100" size="100,100">&lt;&lt;set $partner = $payload[&quot;character&quot;]&gt;&gt;
 You talk to $partner.firstname in the library. You can talk about [[poetry|Conversation-Poetry-Talking]], [[trade gossip|Conversation-Gossip]], or the latest 
-[[current events|Conversation-Politics-Talking]].&lt;br&gt;</tw-passagedata><tw-passagedata pid="10" name="Conversation-Poetry-Talking" tags="" position="1225,100" size="100,100">&lt;&lt;if $poetry &gt; $partner.poetry&gt;&gt;
+[[current events|Conversation-Politics-Talking]].&lt;br&gt;</tw-passagedata><tw-passagedata pid="11" name="Conversation-Poetry-Talking" tags="" position="100,225" size="100,100">&lt;&lt;if $poetry &gt; $partner.poetry&gt;&gt;
 (Poetry success) 
 &lt;&lt;elseif $poetry &lt;= $partner.poetry&gt;&gt;
 (Poetry fail)
@@ -293,7 +292,7 @@ You talk to $partner.firstname in the library. You can talk about [[poetry|Conve
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;br&gt;
-[[Return | Library]]</tw-passagedata><tw-passagedata pid="11" name="Conversation-Politics-Talking" tags="" position="100,225" size="100,100">&lt;&lt;if random(0, 100) &lt; 50&gt;&gt;
+[[Return | Library]]</tw-passagedata><tw-passagedata pid="12" name="Conversation-Politics-Talking" tags="" position="225,225" size="100,100">&lt;&lt;if random(0, 100) &lt; 50&gt;&gt;
 &lt;&lt;set $characters[$partner.id].friendship = $partner.friendship + 1&gt;&gt;
 (Politics conversation success)
 &lt;&lt;else&gt;&gt;
