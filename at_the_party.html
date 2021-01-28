@@ -165,22 +165,23 @@ StoryManager.storylets["Conversation"] = {
             let storylet = {
                 passage: "Conversation",
                 description: "Talk to " + character.name,
-                payload: {character: character},
-                priority: 0
+                priority: 0,
+                character: character
+                
             }
             storylets.push(storylet);
         }
         return storylets;
     }
-};</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStorylets&gt;&gt;
+};</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
     &lt;&lt;for _storylet range $args[0]&gt;&gt;
         &lt;&lt;capture _storylet&gt;&gt;
-        [[_storylet.description|_storylet.passage][$payload=_storylet.payload]]&lt;br&gt;
+        [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]&lt;br&gt;
         &lt;&lt;/capture&gt;&gt;
     &lt;&lt;/for&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">You stand at the edge of the grand ballroom in the Duchess&#39;s palace.
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">You stand at the edge of the grand ballroom in the Duchess&#39;s palace.&lt;br&gt;
 &lt;&lt;set _possibleStories = window.SM.getNStorylets(3)&gt;&gt;
-&lt;&lt;ShowStorylets _possibleStories&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Conversation" tags="" position="350,100" size="100,100">&lt;&lt;set $talkingTo = $payload.character&gt;&gt;
+&lt;&lt;ShowStoryletLinks _possibleStories&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Conversation" tags="" position="350,100" size="100,100">&lt;&lt;set $talkingTo = $currentStorylet.character&gt;&gt;
 You make polite conversation with $talkingTo.name. &lt;br&gt;
 [[Keep circulating | Start]]</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">

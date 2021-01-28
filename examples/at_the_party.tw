@@ -25,8 +25,9 @@ StoryManager.storylets["Conversation"] = {
             let storylet = {
                 passage: "Conversation",
                 description: "Talk to " + character.name,
-                payload: {character: character},
-                priority: 0
+                priority: 0,
+                character: character
+                
             }
             storylets.push(storylet);
         }
@@ -35,13 +36,12 @@ StoryManager.storylets["Conversation"] = {
 };
 
 :: Start
-
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
 <<set _possibleStories = window.SM.getNStorylets(3)>>
-<<ShowStorylets _possibleStories>>
+<<ShowStoryletLinks _possibleStories>>
 
 
 :: Conversation
-<<set $talkingTo = $payload.character>>
+<<set $talkingTo = $currentStorylet.character>>
 You make polite conversation with $talkingTo.name. <br>
 [[Keep circulating | Start]]

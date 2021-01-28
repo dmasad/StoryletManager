@@ -1,8 +1,8 @@
 :: StoryManager Widgets [widget]
-<<widget ShowStorylets>>
+<<widget ShowStoryletLinks>>
     <<for _storylet range $args[0]>>
         <<capture _storylet>>
-        [[_storylet.description|_storylet.passage][$payload=_storylet.payload]]<br>
+        [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
         <</capture>>
     <</for>>
 <</widget>>

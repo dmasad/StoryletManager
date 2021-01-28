@@ -2,6 +2,7 @@
 
 A lightweight storylet manager for Twee and Sugarcube.
 
+### Why another storylet manager?
 
 
 
@@ -16,3 +17,4 @@ A lightweight storylet manager for Twee and Sugarcube.
 - [ ] Storylet tagging and filtering (i.e. pull from only a subset of storylets)
 - [X] Widget for displaying storylet links
   - [ ] Make the widget into a macro
+- [ ] Weighted random choice
