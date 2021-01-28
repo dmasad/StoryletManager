@@ -1,0 +1,47 @@
+:: StoryTitle
+At the Duchess's Party
+
+:: StoryData
+{
+        "ifid": "BE18C022-A213-466C-8DD1-DCCD5CB1DF48"
+}
+
+:: Story JavaScript [script]
+Config.passages.nobr = true; // Deal with linebreaks.
+
+State.variables.characters = [
+    {name: "Arabella Armstrong"},
+    {name: "Blake Brookhaven"},
+    {name: "Claudio Croix"}
+]
+
+NarrativeManager.storylets["Conversation"] = {
+    name: "Conversation",
+    tags: [],
+    generate: function() {
+        let storylets = [];
+        for (let i in State.variables.characters) {
+            let character = State.variables.characters[i];
+            let storylet = {
+                passage: "Conversation",
+                description: "Talk to " + character.name,
+                payload: {character: character},
+                priority: 0
+            }
+            storylets.push(storylet);
+        }
+        return storylets;
+    }
+};
+
+:: Start
+
+You stand at the edge of the grand ballroom in the Duchess's palace.
+<<set _possibleStories = window.NM.getNStorylets(3)>>
+<<ShowStorylets _possibleStories>>
+
+
+:: Conversation
+<<set $talkingTo = $payload.character>>
+You make polite conversation with $talkingTo.name. <br>
+[[Keep circulating | Start]]
