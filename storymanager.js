@@ -6,10 +6,10 @@ var randomChoice = function(vals) {
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
-var NarrativeManager = {};
-NarrativeManager.storylets = {};
+var StoryManager = {};
+StoryManager.storylets = {};
 
-NarrativeManager.getAllStorylets = function() {
+StoryManager.getAllStorylets = function() {
 	let allStorylets = [];
 	for (let key in this.storylets) {
 		let storylets = this.storylets[key].generate();
@@ -18,7 +18,7 @@ NarrativeManager.getAllStorylets = function() {
 	return allStorylets;
 }
 
-NarrativeManager.getNStorylets = function(n) {
+StoryManager.getNStorylets = function(n) {
 	/* 
 		Get N storylets, prioritizing the highest-priority ones first.
 		For now assume that priorities are integers, but it would be nice
@@ -42,4 +42,4 @@ NarrativeManager.getNStorylets = function(n) {
 	return selectedStorylets;
 }
 
-window.NM = NarrativeManager;
+window.SM = StoryManager;

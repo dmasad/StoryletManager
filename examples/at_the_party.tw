@@ -15,7 +15,7 @@ State.variables.characters = [
     {name: "Claudio Croix"}
 ]
 
-NarrativeManager.storylets["Conversation"] = {
+StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: [],
     generate: function() {
@@ -36,8 +36,8 @@ NarrativeManager.storylets["Conversation"] = {
 
 :: Start
 
-You stand at the edge of the grand ballroom in the Duchess's palace.
-<<set _possibleStories = window.NM.getNStorylets(3)>>
+You stand at the edge of the grand ballroom in the Duchess's palace.<br>
+<<set _possibleStories = window.SM.getNStorylets(3)>>
 <<ShowStorylets _possibleStories>>
 
 

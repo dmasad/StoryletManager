@@ -39,7 +39,7 @@ for (let id=0; id<nChars; id++) {
 
 // Set up storylets themselves
 // ------------------------------------------
-NarrativeManager.storylets["Dance"] = {
+StoryManager.storylets["Dance"] = {
 	name: "Dance",
 	tags: ["interaction"],
 	generate: function() {
@@ -62,7 +62,7 @@ NarrativeManager.storylets["Dance"] = {
 };
 
 
-NarrativeManager.storylets["Conversation"] = {
+StoryManager.storylets["Conversation"] = {
 	name: "Conversation",
 	tags: ["interaction"],
 	generate: function() {

@@ -24,7 +24,7 @@ We know the `Conversation` passage is going to be an entrypoint into a storylet,
 
 Every realized storylet comes with some data attached that will fill in its specifics (in Max Kreminski's terminology, the storylet is instantiated by binding some data to it). By default, StoryManager passes this data via the $payload variable. Note that this is a global variable, meaning that it holds the payload relevant for the current storylet only.
 
-Now let's create the characters. To make it easier to write more complicated game-world logic in JavaScript later on, we'll do this in pure JavaScript in the `:: Story JavaScript [script]` passage:
+Now we need to create some data we'll be able to bind to the storylet: so let's create the characters. To make it easier to write more complicated game-world logic in JavaScript later on, we'll do this in pure JavaScript in the `:: Story JavaScript [script]` passage:
 
 ```
 :: Story JavaScript [script]
@@ -40,7 +40,7 @@ Finally, we'll create the storylet generator. This is a function returning the l
 
 ```javascript
 
-NarrativeManager.storylets["Conversation"] = {
+StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: [],
     generate: function() {

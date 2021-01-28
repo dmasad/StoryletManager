@@ -17,7 +17,7 @@ You can go to the [[Ballroom]] or the [[Library]].
 :: Ballroom
 <<set $location = "Ballroom">>
 You're in the ballroom.<br>
-<<set _possibleStories = window.NM.getNStorylets(3)>>
+<<set _possibleStories = window.SM.getNStorylets(3)>>
 <<ShowStorylets _possibleStories>>
 Or you can go to the [[Library]]
 
@@ -71,7 +71,7 @@ Fortunately, they reply with a rumor of their own -- one you haven't heard yet.
 :: Library
 <<set $location = "Library">>
 You're in the library.<br>
-<<set _possibleStories = window.NM.getNStorylets(3)>>
+<<set _possibleStories = window.SM.getNStorylets(3)>>
 <<ShowStorylets _possibleStories>>
 
 Or you can go to the [[Ballroom]]

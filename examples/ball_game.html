@@ -109,10 +109,10 @@ var randomChoice = function(vals) {
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
-var NarrativeManager = {};
-NarrativeManager.storylets = {};
+var StoryManager = {};
+StoryManager.storylets = {};
 
-NarrativeManager.getAllStorylets = function() {
+StoryManager.getAllStorylets = function() {
 	let allStorylets = [];
 	for (let key in this.storylets) {
 		let storylets = this.storylets[key].generate();
@@ -121,7 +121,7 @@ NarrativeManager.getAllStorylets = function() {
 	return allStorylets;
 }
 
-NarrativeManager.getNStorylets = function(n) {
+StoryManager.getNStorylets = function(n) {
 	/* 
 		Get N storylets, prioritizing the highest-priority ones first.
 		For now assume that priorities are integers, but it would be nice
@@ -145,7 +145,7 @@ NarrativeManager.getNStorylets = function(n) {
 	return selectedStorylets;
 }
 
-window.NM = NarrativeManager;
+window.SM = StoryManager;
 /* twine-user-script #2: "ball_game.js" */
 // Set up narrative model
 // -----------------------------------------------------------------------
@@ -188,7 +188,7 @@ for (let id=0; id<nChars; id++) {
 
 // Set up storylets themselves
 // ------------------------------------------
-NarrativeManager.storylets["Dance"] = {
+StoryManager.storylets["Dance"] = {
 	name: "Dance",
 	tags: ["interaction"],
 	generate: function() {
@@ -211,7 +211,7 @@ NarrativeManager.storylets["Dance"] = {
 };
 
 
-NarrativeManager.storylets["Conversation"] = {
+StoryManager.storylets["Conversation"] = {
 	name: "Conversation",
 	tags: ["interaction"],
 	generate: function() {
@@ -243,7 +243,7 @@ Config.passages.nobr = true; // Deal with linebreaks.</script><tw-passagedata pi
 &lt;&lt;set $gossip = 0&gt;&gt;
 You can go to the [[Ballroom]] or the [[Library]].</tw-passagedata><tw-passagedata pid="3" name="Ballroom" tags="" position="350,100" size="100,100">&lt;&lt;set $location = &quot;Ballroom&quot;&gt;&gt;
 You&#39;re in the ballroom.&lt;br&gt;
-&lt;&lt;set _possibleStories = window.NM.getNStorylets(3)&gt;&gt;
+&lt;&lt;set _possibleStories = window.SM.getNStorylets(3)&gt;&gt;
 &lt;&lt;ShowStorylets _possibleStories&gt;&gt;
 Or you can go to the [[Library]]</tw-passagedata><tw-passagedata pid="4" name="DancingRoot" tags="" position="475,100" size="100,100">&lt;&lt;set $partner = $payload[&quot;character&quot;]&gt;&gt;
 You take &lt;&lt;print $partner.firstname&gt;&gt;&#39;s hand and step onto the dance floor. As you dance, you can
@@ -277,7 +277,7 @@ Fortunately, they reply with a rumor of their own -- one you haven&#39;t heard y
 [[Return | Library]]
 &lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="Library" tags="" position="1100,100" size="100,100">&lt;&lt;set $location = &quot;Library&quot;&gt;&gt;
 You&#39;re in the library.&lt;br&gt;
-&lt;&lt;set _possibleStories = window.NM.getNStorylets(3)&gt;&gt;
+&lt;&lt;set _possibleStories = window.SM.getNStorylets(3)&gt;&gt;
 &lt;&lt;ShowStorylets _possibleStories&gt;&gt;
 
 Or you can go to the [[Ballroom]]</tw-passagedata><tw-passagedata pid="10" name="ConversationRoot" tags="" position="1225,100" size="100,100">&lt;&lt;set $partner = $payload[&quot;character&quot;]&gt;&gt;

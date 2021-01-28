@@ -109,10 +109,10 @@ var randomChoice = function(vals) {
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
-var NarrativeManager = {};
-NarrativeManager.storylets = {};
+var StoryManager = {};
+StoryManager.storylets = {};
 
-NarrativeManager.getAllStorylets = function() {
+StoryManager.getAllStorylets = function() {
 	let allStorylets = [];
 	for (let key in this.storylets) {
 		let storylets = this.storylets[key].generate();
@@ -121,7 +121,7 @@ NarrativeManager.getAllStorylets = function() {
 	return allStorylets;
 }
 
-NarrativeManager.getNStorylets = function(n) {
+StoryManager.getNStorylets = function(n) {
 	/* 
 		Get N storylets, prioritizing the highest-priority ones first.
 		For now assume that priorities are integers, but it would be nice
@@ -145,7 +145,7 @@ NarrativeManager.getNStorylets = function(n) {
 	return selectedStorylets;
 }
 
-window.NM = NarrativeManager;
+window.SM = StoryManager;
 /* twine-user-script #2: "Story JavaScript" */
 Config.passages.nobr = true; // Deal with linebreaks.
 
@@ -155,7 +155,7 @@ State.variables.characters = [
     {name: "Claudio Croix"}
 ]
 
-NarrativeManager.storylets["Conversation"] = {
+StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: [],
     generate: function() {
@@ -179,7 +179,7 @@ NarrativeManager.storylets["Conversation"] = {
         &lt;&lt;/capture&gt;&gt;
     &lt;&lt;/for&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">You stand at the edge of the grand ballroom in the Duchess&#39;s palace.
-&lt;&lt;set _possibleStories = window.NM.getNStorylets(3)&gt;&gt;
+&lt;&lt;set _possibleStories = window.SM.getNStorylets(3)&gt;&gt;
 &lt;&lt;ShowStorylets _possibleStories&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Conversation" tags="" position="350,100" size="100,100">&lt;&lt;set $talkingTo = $payload.character&gt;&gt;
 You make polite conversation with $talkingTo.name. &lt;br&gt;
 [[Keep circulating | Start]]</tw-passagedata></tw-storydata>
