@@ -9,17 +9,19 @@ var randomChoice = function(vals) {
 var StoryManager = {};
 StoryManager.storylets = {};
 
-StoryManager.getAllStorylets = function() {
+StoryManager.getAllStorylets = function(tag=null) {
 	let allStorylets = [];
 	for (let key in this.storylets) {
-		let storylets = this.storylets[key].generate();
-		for (let i in storylets) allStorylets.push(storylets[i]);
+		let storylet = this.storylets[key];
+		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
+			let storylets = storylet.generate();
+			for (let i in storylets) allStorylets.push(storylets[i]); 
+		}
 	}
 	return allStorylets;
 }
 
-StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) 
-{
+StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	/* 
 		Get n storylets, prioritizing the highest-priority ones first.
 
@@ -32,14 +34,15 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true)
 
 	*/
 	let allStorylets;
-	if (tag == null) allStorylets = this.getAllStorylets();
-	// TODO: get tagged storylets
+	allStorylets = this.getAllStorylets(tag);
+	
 
 	// Check for interruptions
 	// TODO: Handle more than one interruption
-	if (respect_interrupt)
+	if (respect_interrupt) {
 		for (let i in allStorylets)
 			if (allStorylets[i].interrupt) return [allStorylets[i]];
+	}
 
 	// Get n stories in priority order
 	if (n != null) {

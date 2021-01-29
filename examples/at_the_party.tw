@@ -9,15 +9,26 @@ At the Duchess's Party
 :: Story JavaScript [script]
 Config.passages.nobr = true; // Deal with linebreaks.
 
+State.variables.playerKnowledge = {poetry: 0, industry: 0, astronomy: 0};
+
 State.variables.characters = [
-    {name: "Arabella Armstrong"},
-    {name: "Blake Brookhaven"},
-    {name: "Claudio Croix"}
+    {
+        name: "Arabella Armstrong",
+        poetry: 3, industry: 0, astronomy: 0
+    },
+    {
+        name: "Blake Brookhaven",
+        poetry: 0, industry: 3, astronomy: 0
+    },
+    {
+        name: "Claudio Croix",
+        poetry: 0, industry: 0, astronomy: 3
+    }
 ]
 
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
-    tags: [],
+    tags: ["circulating"],
     generate: function() {
         let storylets = [];
         for (let i in State.variables.characters) {
@@ -37,7 +48,7 @@ StoryManager.storylets["Conversation"] = {
 
 StoryManager.storylets["Buttonholed"] = {
     name: "Buttonholed",
-    tags: [],
+    tags: ["circulating"],
     generate: function() {
         if (Math.random() < 0.2) {
             let char = randomChoice(State.variables.characters);
@@ -49,19 +60,44 @@ StoryManager.storylets["Buttonholed"] = {
             }]
         }
     }
-}
+};
+
+StoryManager.storylets["Conversation topic"] = {
+    name: "Conversation topic",
+    tags: ["during conversation"],
+    generate: function() {
+        let storylets = [];
+        for (let topic in State.variables.playerKnowledge) {
+            if (State.variables.playerKnowledge[topic] > 0 |
+                State.variables.currentStorylet.character[topic] > 0)
+                storylets.push({
+                    passage: "Conversation topic",
+                    description: "Talk about " + topic,
+                    priority: 0,
+                    topic: topic
+                })
+        }
+        return storylets;
+    }
+};
+
 
 :: Start
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
-<<set _possibleStories = window.SM.getStorylets(3)>>
+<<set _possibleStories = window.SM.getStorylets(3, "circulating")>>
 <<ShowStoryletLinks _possibleStories>>
 
 
 :: Conversation
 <<set $talkingTo = $currentStorylet.character>>
-You make polite conversation with $talkingTo.name. <br>
+You talk with $talkingTo.name. <br>
+<<set _possibleStories = window.SM.getStorylets(3, "during conversation")>>
+<<ShowStoryletLinks _possibleStories>>
 [[Keep circulating | Start]]
 
 :: Being approached
 $currentStorylet.character.name is coming toward you to talk. <br>
 You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].
+
+:: Conversation topic
+<<set $topic = $currentStorylet.topic>>

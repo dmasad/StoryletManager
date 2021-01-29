@@ -4,6 +4,8 @@
 
 One thing that dynamic storylets are good for is when you want a to write one basic structure for an interaction that will play out differently when bound to different variables. 
 
+## Basic Example
+
 As a simple example, let's make a tiny game about attending a party. The player can only engage in one activity: talking to other guests. There will be different guests at the party, and each may want to talk about a different topic. 
 
 In the simplest possible implementation, there is just one storylet: `conversation`. We need to set up three things: the parameterized passage that represents the entry-point into the storylet; a list of characters the player might talk to; and the storylet generator that goes into `StoryManager` itself.
@@ -148,7 +150,7 @@ To compile this with Tweego, run:
 > tweego storymanager.js storymanager-widgets.tw examples\at_the_party.tw -o at_the_party.html
 ```
 
-### Adding interruptions
+## Adding interruptions
 
 Is it even a real party if you aren't buttonholed by another guest at some point or another? In many games you'll want to allow some storylets to override the other options and require the player to engage with them now. We do this via a storylet that has the `interrupt==true` property.
 
@@ -184,3 +186,74 @@ $currentStorylet.character.name is coming toward you to talk. You can [[talk to 
 ```
 
 We have to be sure to change the `passage` in the `"Buttonholed"` storylet to this new passage as well. 
+
+This also demonstrates how regular Twine links can be used alongside storylets. Since the `$currentStorylet` variable was set when entering the Buttonholed / Being approached storylet, its `character` property is still available to the `Conversation` passage, if the player chooses to go that route.
+
+(In a more complete game, you'd want to add some code to impose a social consequence for snubbing someone.)
+
+## Using tags
+
+We probably want to add some content to the conversations the player can have. One way to do this is the traditional Twine way: have the `Conversation` passage link to several other passages, each relating to something the player might say, possibly determined in part by some property of the character they are talking to. Storylets offer another way to do it. Different conversation topics may themselves be storylets, which only become available when the player is already engaged in a conversation. 
+
+#### Sidebar: Game Mechanics
+
+Now is a good time to pause and think about game mechanics, and what this game is about. Let's have the protagonist be an imposter, who has somehow ended up in this high-society party they have no business being at. The player is going to need to figure out how to blend in -- which means picking up information from some conversations they can turn around and immediately use in others. Not only does this provide a (hopefully) interesting mechanic, it lets the player unlock plot or worldbuilding elements as they advance in the game.
+
+We'll create three topics of conversation, each of which has three levels of knowledge. Each character at the party will have a favored topic, and some level of knowledge about it. The game will also track the player character's knowledge, which starts at 0. When an NPC knows more than the protagonist about a topic, the protagonist gains knowledge, but not reputation. When they can tell someone else something new, their reputation goes up.
+
+#### Back to tags
+
+To use storylets for conversation topics as well, we're now going to want two kinds of storylets that are accessible in different contexts: one for starting conversations with other characters; the other for conversation topics. One option is to add a state variable that's set when a conversation starts and cleared when it ends, and have the "Conversation" and "Buttonholed" storylet generators check them. But a simpler option is to give each type of storylet a **tag**, and then in the appropriate context only generate storylets with the tag appropriate for that context.
+
+We'll create two tags: `"circulating"` for things that can happen while the protagonist is circulating in the party, and `"during conversation"` for things that can happen while- well you get it.
+
+We also need to update our world model to account for this mechanic: we need to track the protagonist's knowledge, and update the characters to account for their favorite topics and level of knowledge. 
+
+```javascript
+State.variables.player_knowledge = {poetry: 0, industry: 0, astronomy: 0};
+
+// For initial testing purposes, let's make each one an expert in a different topic
+
+State.variables.characters = [
+    {
+        name: "Arabella Armstrong",
+        poetry: 3, industry: 0, astronomy: 0
+    },
+    {
+        name: "Blake Brookhaven"
+        poetry: 0, industry: 3, astronomy: 0
+    },
+    {
+        name: "Claudio Croix",
+        poetry: 0, industry: 0, astronomy: 3
+    }
+]
+
+```
+
+
+
+### Adding content
+
+Let's create these topics:
+
+```javascript
+State.variables.conversationTopics = {
+    "Poetry": [ "the new book of praise verse by Miss Causewell",
+                "the recitations at Madame Bautan's salon",
+                "Miss Causewell's previous volume, which was banned by the Censor."],
+    "Industry": ["the engine factory that recently opened by the Long Bridge.",
+                 "the new railway line being proposed to Draundle.",
+                 "the explosion at the shipyards."],
+    "Astronomy": ["the new red star in the night sky.", 
+                  "the latest theories about the star from Imperial University.",
+                  "Professor Hix, the court astronomer, has not been seen in some time."]
+}
+```
+
+We'll probably also want more than three characters, to give the player enough people to converse with. Instead of writing them all by hand, now would be a good time to add some simple procedural generation. 
+
+```javascript
+firstNames
+
+```

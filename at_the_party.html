@@ -112,17 +112,19 @@ var randomChoice = function(vals) {
 var StoryManager = {};
 StoryManager.storylets = {};
 
-StoryManager.getAllStorylets = function() {
+StoryManager.getAllStorylets = function(tag=null) {
 	let allStorylets = [];
 	for (let key in this.storylets) {
-		let storylets = this.storylets[key].generate();
-		for (let i in storylets) allStorylets.push(storylets[i]);
+		let storylet = this.storylets[key];
+		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
+			let storylets = storylet.generate();
+			for (let i in storylets) allStorylets.push(storylets[i]); 
+		}
 	}
 	return allStorylets;
 }
 
-StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) 
-{
+StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	/* 
 		Get n storylets, prioritizing the highest-priority ones first.
 
@@ -135,14 +137,15 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true)
 
 	*/
 	let allStorylets;
-	if (tag == null) allStorylets = this.getAllStorylets();
-	// TODO: get tagged storylets
+	allStorylets = this.getAllStorylets(tag);
+	
 
 	// Check for interruptions
 	// TODO: Handle more than one interruption
-	if (respect_interrupt)
+	if (respect_interrupt) {
 		for (let i in allStorylets)
 			if (allStorylets[i].interrupt) return [allStorylets[i]];
+	}
 
 	// Get n stories in priority order
 	if (n != null) {
@@ -169,15 +172,26 @@ window.SM = StoryManager;
 /* twine-user-script #2: "Story JavaScript" */
 Config.passages.nobr = true; // Deal with linebreaks.
 
+State.variables.playerKnowledge = {poetry: 0, industry: 0, astronomy: 0};
+
 State.variables.characters = [
-    {name: "Arabella Armstrong"},
-    {name: "Blake Brookhaven"},
-    {name: "Claudio Croix"}
+    {
+        name: "Arabella Armstrong",
+        poetry: 3, industry: 0, astronomy: 0
+    },
+    {
+        name: "Blake Brookhaven",
+        poetry: 0, industry: 3, astronomy: 0
+    },
+    {
+        name: "Claudio Croix",
+        poetry: 0, industry: 0, astronomy: 3
+    }
 ]
 
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
-    tags: [],
+    tags: ["circulating"],
     generate: function() {
         let storylets = [];
         for (let i in State.variables.characters) {
@@ -197,7 +211,7 @@ StoryManager.storylets["Conversation"] = {
 
 StoryManager.storylets["Buttonholed"] = {
     name: "Buttonholed",
-    tags: [],
+    tags: ["circulating"],
     generate: function() {
         if (Math.random() < 0.2) {
             let char = randomChoice(State.variables.characters);
@@ -209,16 +223,38 @@ StoryManager.storylets["Buttonholed"] = {
             }]
         }
     }
-}</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
+};
+
+StoryManager.storylets["Conversation topic"] = {
+    name: "Conversation topic",
+    tags: ["during conversation"],
+    generate: function() {
+        let storylets = [];
+        for (let topic in State.variables.playerKnowledge) {
+            if (State.variables.playerKnowledge[topic] > 0 |
+                State.variables.currentStorylet.character[topic] > 0)
+                storylets.push({
+                    passage: "Conversation topic",
+                    description: "Talk about " + topic,
+                    priority: 0,
+                    topic: topic
+                })
+        }
+        return storylets;
+    }
+};</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
     &lt;&lt;for _storylet range $args[0]&gt;&gt;
         &lt;&lt;capture _storylet&gt;&gt;
         [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]&lt;br&gt;
         &lt;&lt;/capture&gt;&gt;
     &lt;&lt;/for&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">You stand at the edge of the grand ballroom in the Duchess&#39;s palace.&lt;br&gt;
-&lt;&lt;set _possibleStories = window.SM.getStorylets(3)&gt;&gt;
+&lt;&lt;set _possibleStories = window.SM.getStorylets(3, &quot;circulating&quot;)&gt;&gt;
 &lt;&lt;ShowStoryletLinks _possibleStories&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Conversation" tags="" position="350,100" size="100,100">&lt;&lt;set $talkingTo = $currentStorylet.character&gt;&gt;
-You make polite conversation with $talkingTo.name. &lt;br&gt;
+You talk with $talkingTo.name. &lt;br&gt;
+&lt;&lt;set _possibleStories = window.SM.getStorylets(3, &quot;during conversation&quot;)&gt;&gt;
+&lt;&lt;ShowStoryletLinks _possibleStories&gt;&gt;
+
 [[Keep circulating | Start]]</tw-passagedata><tw-passagedata pid="4" name="Being approached" tags="" position="475,100" size="100,100">$currentStorylet.character.name is coming toward you to talk. &lt;br&gt;
 You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
