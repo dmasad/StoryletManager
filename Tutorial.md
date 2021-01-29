@@ -152,3 +152,35 @@ To compile this with Tweego, run:
 
 Is it even a real party if you aren't buttonholed by another guest at some point or another? In many games you'll want to allow some storylets to override the other options and require the player to engage with them now. We do this via a storylet that has the `interrupt==true` property.
 
+(**Note:** At the moment, if there is more than one interrupting storylet only the first one is fired, regardless of priority or anything else. TODO: Incorporate some sort of interrupt ranking, queue etc.)
+
+Let's have a 20% chance of another random guest coming up and talking to the player. We add this storylet to the StoryManager:
+
+```javascript
+StoryManager.storylets["Buttonholed"] = {
+    name: "Buttonholed",
+    tags: [],
+    generate: function() {
+        if (Math.random() < 0.2) {
+            let char = randomChoice(State.variables.characters);
+            return [{
+                passage: "Being approached",
+                description: "You see " + char.name + " approaching you.",
+                interrupt: true,
+                character: char
+            }]
+        }
+    }
+}
+```
+
+You'll notice that this storylet leads to the same `Conversation` passage as the previous "Conversation" storylet. The only difference is that since this one has the `interrupt` property, the player will have no other option but to engage with them. 
+
+However, maybe we want to give the player a choice here: engage the buttonholer in conversation, or avoid it -- at the risk of snubbing them. To do that, we could create a new passage:
+
+```
+:: Being approached
+$currentStorylet.character.name is coming toward you to talk. You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].
+```
+
+We have to be sure to change the `passage` in the `"Buttonholed"` storylet to this new passage as well. 

@@ -38,8 +38,8 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true)
 	// Check for interruptions
 	// TODO: Handle more than one interruption
 	if (respect_interrupt)
-		for (let storylet in allStorylets)
-			if (storylet.interrupt) return [storylet];
+		for (let i in allStorylets)
+			if (allStorylets[i].interrupt) return [allStorylets[i]];
 
 	// Get n stories in priority order
 	if (n != null) {

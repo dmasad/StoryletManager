@@ -35,6 +35,22 @@ StoryManager.storylets["Conversation"] = {
     }
 };
 
+StoryManager.storylets["Buttonholed"] = {
+    name: "Buttonholed",
+    tags: [],
+    generate: function() {
+        if (Math.random() < 0.2) {
+            let char = randomChoice(State.variables.characters);
+            return [{
+                passage: "Being approached",
+                description: "You see " + char.name + " approaching you.",
+                interrupt: true,
+                character: char
+            }]
+        }
+    }
+}
+
 :: Start
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
 <<set _possibleStories = window.SM.getStorylets(3)>>
@@ -45,3 +61,7 @@ You stand at the edge of the grand ballroom in the Duchess's palace.<br>
 <<set $talkingTo = $currentStorylet.character>>
 You make polite conversation with $talkingTo.name. <br>
 [[Keep circulating | Start]]
+
+:: Being approached
+$currentStorylet.character.name is coming toward you to talk. <br>
+You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].
