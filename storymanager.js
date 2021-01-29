@@ -18,19 +18,39 @@ StoryManager.getAllStorylets = function() {
 	return allStorylets;
 }
 
-StoryManager.getNStorylets = function(n) {
+StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) 
+{
 	/* 
-		Get N storylets, prioritizing the highest-priority ones first.
+		Get n storylets, prioritizing the highest-priority ones first.
+
+		n: if not null, return at most n storylets
+		tag: Only get storylets matching this tag
+		respect_interrupt: if true, any interrupt storylet overrides n and priority
+
 		For now assume that priorities are integers, but it would be nice
 		to be more flexible.
 
 	*/
-	let allStorylets = this.getAllStorylets();
-	n = Math.min(n, allStorylets.length);
-	if (n == 0) return [];
+	let allStorylets;
+	if (tag == null) allStorylets = this.getAllStorylets();
+	// TODO: get tagged storylets
+
+	// Check for interruptions
+	// TODO: Handle more than one interruption
+	if (respect_interrupt)
+		for (let storylet in allStorylets)
+			if (storylet.interrupt) return [storylet];
+
+	// Get n stories in priority order
+	if (n != null) {
+		n = Math.min(n, allStorylets.length);
+		if (n == 0) return [];
+	}
+	else n = allStorylets.length;
 	let selectedStorylets = [];
 	// First sort by ascending priority:
 	allStorylets.sort((a, b) => b.priority - a.priority);
+
 	let currentPriority = allStorylets[0].priority;
 	while (selectedStorylets.length < n) {
 		let priorityStorylets = allStorylets.filter(s => s.priority==currentPriority);

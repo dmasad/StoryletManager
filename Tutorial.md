@@ -72,14 +72,14 @@ Finally, we get to the custom properties. In this case there's just one:
 
 * `character`: This is the specific character that'll be bound to this storylet instance. 
 
-Now that we have the storylet generator, all that's left to do is to query it in the appropriate Twine passage, and then do something with each possible storylet. We can get the array of available instantiated storylets with `window.SM.getAllStorylets()`. 
+Now that we have the storylet generator, all that's left to do is to query it in the appropriate Twine passage, and then do something with each possible storylet. We can get the array of available instantiated storylets with `window.SM.getStorylets()`. 
 
 One typical thing to do with this list is create a link associated with each possible storylet for the player to choose from. We can do it like this:
 
 ```
 :: Start
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
-<<set _possibleStorylets = window.SM.getAllStorylets()>>
+<<set _possibleStorylets = window.SM.getStorylets()>>
 <<for _story range _possibleStorylets>>
     <<capture _story>>
     [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
@@ -87,7 +87,7 @@ You stand at the edge of the grand ballroom in the Duchess's palace.<br>
 <</for>>
 ```
 
-This creates one link per available storylet. Each link will have the storylet description as its text, link to the storylet's passage, and when selected will story the storylet's data in the `$currentStorylet` variable, so that the storylet passage itself can access it. This pattern is (expected to be) common enough that there's a widget for it: `<<ShowStoryletLinks>>`. (**TODO:** Make this a macro). We may also not want to show *all* the available storylets. When there are just three guests it isn't so bad, but if the party has five, or ten, or more NPCs, giving the player the entire list will get overwhelming fast. We can randomly choose a subset, to emulate how people randomly circulate during the party. Instead, maybe we want to choose only some number of storylets to display. We can do this with `window.SM.getNStorylets(n)` where `n` is the number of storylets to get. Storylets are selected in order of priority, so that the list is filled with higher-priority storylets first.
+This creates one link per available storylet. Each link will have the storylet description as its text, link to the storylet's passage, and when selected will story the storylet's data in the `$currentStorylet` variable, so that the storylet passage itself can access it. This pattern is (expected to be) common enough that there's a widget for it: `<<ShowStoryletLinks>>`. (**TODO:** Make this a macro). We may also not want to show *all* the available storylets. When there are just three guests it isn't so bad, but if the party has five, or ten, or more NPCs, giving the player the entire list will get overwhelming fast. We can randomly choose a subset, to emulate how people randomly circulate during the party. Instead, maybe we want to choose only some number of storylets to display. We can do this by passing a number to `getStorylets`indicating the maximum number of storylets to get. Storylets are selected in order of priority, so that the list is filled with higher-priority storylets first.
 
 #### Putting it all together
 
@@ -133,7 +133,7 @@ StoryManager.storylets["Conversation"] = {
 
 :: Start
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
-<<set _possibleStories = window.SM.getNStorylets(3)>>
+<<set _possibleStories = window.SM.getStorylets(3)>>
 <<ShowStoryletLinks _possibleStories>>
 
 
@@ -145,6 +145,10 @@ You make polite conversation with $talkingTo.name. <br>
 
 To compile this with Tweego, run:
 ```
-tweego storymanager.js storymanager-widgets.tw examples\at_the_party.tw -o at_the_party.html
+> tweego storymanager.js storymanager-widgets.tw examples\at_the_party.tw -o at_the_party.html
 ```
+
+### Adding interruptions
+
+Is it even a real party if you aren't buttonholed by another guest at some point or another? In many games you'll want to allow some storylets to override the other options and require the player to engage with them now. We do this via a storylet that has the `interrupt==true` property.
 

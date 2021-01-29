@@ -37,7 +37,7 @@ StoryManager.storylets["Conversation"] = {
 
 :: Start
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
-<<set _possibleStories = window.SM.getNStorylets(3)>>
+<<set _possibleStories = window.SM.getStorylets(3)>>
 <<ShowStoryletLinks _possibleStories>>
 
 
