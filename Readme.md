@@ -1,6 +1,8 @@
 # StoryManager
 
-StoryManager is a lightweight add-on for Twine + SugarCube implementing parameterized storylets. It's intended for people who are comfortable using JavaScript along with Twine, and want to use it to manage data for their interactive fiction. 
+StoryManager is a lightweight add-on for Twine + SugarCube implementing parameterized storylets. It's intended for people who are comfortable using JavaScript along with Twine, and want to use it to manage data and world-models for their interactive fiction. 
+
+You can use it in the Twine interactive editor, but at the moment it's probably best used with the [Tweego](https://www.motoslave.net/tweego/) command-line tool.
 
 ## How to use it
 
@@ -84,3 +86,10 @@ I have a few Twine hobby projects in various stage of completion, and I found my
 - [ ] Explore replacing storylet generators returning arrays with the `yield` keyword? **Pro:** produces cleaner code; **Con:** requires users to understand `yield` and remember to use the function * notation.
 - [ ] Add storylet code to passages (as comments, a-la Tiny-QBN?)
 - [ ] CSS styling (probably to go with widgets/macros?)
+
+Pull requests welcome!
+
+## License
+
+MIT License
+
