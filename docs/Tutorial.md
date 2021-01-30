@@ -20,9 +20,9 @@ You stand at the edge of the grand ballroom in the Duchess's palace.
 You make polite conversation with $talkingTo.name. <br>
 [[Keep circulating | Start]]
 ```
-We know the `Conversation` passage is going to be an entrypoint into a storylet, so the first thing we need to do is get who the player is having this conversation with, stored in the `$payload` variable.
+We know the `Conversation` passage is going to be an entrypoint into a storylet, so the first thing we need to do is get who the player is having this conversation with, stored in the `$currentStorylet` variable.
 
-Every realized storylet comes with some data attached that will fill in its specifics (in Max Kreminski's terminology, the storylet is instantiated by binding some data to it). By default, StoryManager passes this data via the $payload variable. Note that this is a global variable, meaning that it holds the payload relevant for the current storylet only.
+Every realized storylet comes with some data attached that will fill in its specifics (in Max Kreminski's terminology, the storylet is instantiated by binding some data to it). By default, StoryManager passes this data via the `$currentStorylet` variable. Note that this is a global variable, meaning that it holds the information relevant for the current storylet only.
 
 Now we need to create some data we'll be able to bind to the storylet: so let's create the characters. To make it easier to write more complicated game-world logic in JavaScript later on, we'll do this in pure JavaScript in the `:: Story JavaScript [script]` passage:
 
@@ -145,12 +145,12 @@ You make polite conversation with $talkingTo.name. <br>
 
 To compile this with Tweego, run:
 ```
-> tweego storymanager.js storymanager-widgets.tw examples\at_the_party.tw -o at_the_party.html
+> tweego storymanager.js storymanager-widgets.tw examples\tutorial.tw -o tutorial.html
 ```
 
 ## Adding interruptions
 
-Is it even a real party if you aren't buttonholed by another guest at some point or another? In many games you'll want to allow some storylets to override the other options and require the player to engage with them now. We do this via a storylet that has the `interrupt==true` property.
+Is it even a real party if you aren't buttonholed by another guest at some point or another? In many games you'll want to allow some storylets to override the other options and require the player to engage with them now. We do this via a storylet that has the `interrupt: true` property.
 
 (**Note:** At the moment, if there is more than one interrupting storylet only the first one is fired, regardless of priority or anything else. TODO: Incorporate some sort of interrupt ranking, queue etc.)
 
