@@ -2,8 +2,6 @@
 
 *Very rough tutorial intended to introduce the StoryManager core functionality as I develop it*.
 
-One thing that dynamic storylets are good for is when you want a to write one basic structure for an interaction that will play out differently when bound to different variables. 
-
 ## Basic Example
 
 As a simple example, let's make a tiny game about attending a party. The player can only engage in one activity: talking to other guests. There will be different guests at the party, and each may want to talk about a different topic. 
@@ -182,7 +180,8 @@ However, maybe we want to give the player a choice here: engage the buttonholer 
 
 ```
 :: Being approached
-$currentStorylet.character.name is coming toward you to talk. You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].
+$currentStorylet.character.name is coming toward you to talk.<br>
+You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].
 ```
 
 We have to be sure to change the `passage` in the `"Buttonholed"` storylet to this new passage as well. 
@@ -393,4 +392,9 @@ StoryManager.storylets["Seeing the duchess"] = {
 };
 ```
 
-And that's it! 
+And that's it! You can compile the final game (such as it is) with
+
+```
+> tweego storymanager.js storymanager-widgets.tw examples\duchess_party.js examples\duchess_party.tw -o examples\duchess_party.html
+```
+You can view the full code in the [examples folder](https://github.com/dmasad/StoryletManager/tree/main/examples) or [try playing it]().

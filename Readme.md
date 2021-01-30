@@ -20,6 +20,7 @@ StoryManager.storylets["Go somewhere"] = {
         let storylets = [];
         for (let loc of State.variables.locations) {
             if (loc == State.variables.currentLocation) continue;
+            // Below is the instantiated potential storylet object:
             let storylet = {
                 passage: "Orbit", // Name of the passage the storylet links to
                 description: "Jump to " + loc, // Storylet link text
@@ -75,6 +76,7 @@ I have a few Twine hobby projects in various stage of completion, and I found my
 
 - [X] Generating potential storylets based on state
 - [X] Filtering to N storylets based on priority
+  - [ ] Don't assume priority is an integer
 - [X] Allowing some storylets to interrupt and take priority
 - [ ] Track storylet history (e.g. to prevent repetition)
   - [ ]  Storylets bound to specific data
