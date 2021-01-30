@@ -1,0 +1,51 @@
+:: StoryTitle
+Simple Space Example
+
+:: StoryData
+{
+        "ifid": "2EE3728E-B079-4539-9A9C-97CD8474B4C5"
+}
+
+:: Story JavaScript [script]
+Config.passages.nobr = true; // No unspecified linebreaks.
+
+State.variables.locations = ["Earth", "Mars", "Ganymede"]; 
+State.variables.currentLocation = "Deep space";
+
+StoryManager.storylets["Go somewhere"] = {
+    name: "Go somewhere",
+    tags: ["in space"],
+    generate: function() {
+        let storylets = [];
+        for (let loc of State.variables.locations) {
+            if (loc == State.variables.currentLocation) continue;
+            let storylet = {
+                passage: "Orbit", // Name of the passage the storylet links to
+                description: "Jump to " + loc, // Storylet link text
+                planet: loc // Data associated with this storylet
+            };
+            storylets.push(storylet);
+        }
+        return storylets;
+    }
+}
+
+:: Start
+
+You find yourself in $currentLocation. You should probably [[jump | Jump]].
+
+:: Jump
+You prep your ship to jump.
+<<set _possibleStorylets = window.SM.getStorylets()>>
+<<ShowStoryletLinks _possibleStorylets>>
+
+:: Orbit
+<<set $currentLocation = $currentStorylet.planet>>
+You orbit around $currentLocation.
+
+[[Explore the surface]] or [[Jump]] somewhere else.
+
+:: Explore the surface
+You take your shuttle down to the surface of $currentLocation.
+
+Return to [[Orbit]]

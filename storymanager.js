@@ -1,9 +1,4 @@
 
-// Choose one of an array
-var randomChoice = function(vals) {
-	return vals[Math.floor(Math.random() * vals.length)];
-};
-
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
 var StoryManager = {};
@@ -11,11 +6,17 @@ StoryManager.storylets = {};
 
 StoryManager.getAllStorylets = function(tag=null) {
 	let allStorylets = [];
+	let storylet, storylets, boundStorylet;
 	for (let key in this.storylets) {
-		let storylet = this.storylets[key];
+		storylet = this.storylets[key];
 		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
-			let storylets = storylet.generate();
-			for (let i in storylets) allStorylets.push(storylets[i]); 
+			// TODO: If using yield, this part will change
+			storylets = storylet.generate();
+			for (let i in storylets) {
+				boundStorylet = storylets[i];
+				if (!("priority" in boundStorylet)) boundStorylet.priority = 0;
+				allStorylets.push(storylets[i]); 
+			}
 		}
 	}
 	return allStorylets;
