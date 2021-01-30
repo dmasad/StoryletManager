@@ -18,3 +18,4 @@ A lightweight storylet manager for Twee and Sugarcube.
 - [X] Widget for displaying storylet links
   - [ ] Make the widget into a macro
 - [ ] Weighted random choice
+- [ ] Explore replacing storylet generators returning arrays with the `yield` keyword? **Pro:** produces cleaner code; **Con:** requires users to understand `yield` and remember to use the function * notation.

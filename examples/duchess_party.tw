@@ -1,0 +1,64 @@
+:: StoryTitle
+At the Duchess's Party
+
+:: StoryData
+{
+        "ifid": "BE18C022-A213-466C-8DD1-DCCD5CB1DF48"
+}
+
+:: Story JavaScript [script]
+Config.passages.nobr = true; // Deal with linebreaks.
+
+:: Start
+The footmen at the door to the duchess's city residence bows over your forged invitation, seemingly not examining at all. The uniform you wear is authentic, at least, though Frin had found a tailor who would accept some extra florins to not demand to see a letter of appointment before sewing on captain's bars. And just like that, you're in. Could it be that easy, you wonder? <br> <br>
+
+Of course it isn't. The hall is filled with aristocrats in evening-wear, making small talk in an ever-shifting constellation. Across the room, the doors to the duchess's private rooms are firmly closed. No way to sneak in without being seen. You're going to have to find a way to [[talk your way in | Circulating]]. 
+
+:: Circulating
+You mingle through the crowd, keeping a wary eye around you.<br>
+<<set _possibleStories = window.SM.getStorylets(3, "circulating")>>
+<<ShowStoryletLinks _possibleStories>>
+
+
+:: Conversation
+<<set $talkingTo = $currentStorylet.character>>
+You talk with $talkingTo.name. <br>
+<<set _possibleStories = window.SM.getStorylets(3, "during conversation")>>
+<<ShowStoryletLinks _possibleStories>>
+[[Keep circulating | Circulating]]
+
+:: Being approached
+$currentStorylet.character.name is coming toward you to talk. <br>
+You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Circulating][$reputation = $reputation - 1]].
+
+:: Conversation topic
+<<set $topic = $currentStorylet.topic>>
+<<if $playerKnowledge[$topic] < $talkingTo[$topic] >>
+$talkingTo.name tells you about <<print $conversationTopics[$topic][$playerKnowledge[$topic]]>>.
+<<set $playerKnowledge[$topic] = $playerKnowledge[$topic] + 1>>
+<<set $reputation = $reputation - 0.5>>
+<<elseif $playerKnowledge[$topic] == $talkingTo[$topic]>>
+You and $talkingTo.name discuss <<print $conversationTopics[$topic][$playerKnowledge[$topic]]>>.
+<<set $reputation = $reputation + 1>>
+<<elseif $playerKnowledge[$topic] > $talkingTo[$topic]>>
+You tell $talkingTo.name about <<print $conversationTopics[$topic][$talkingTo[$topic]]>>. 
+<<set $characters[$talkingTo.id][$topic] = $talkingTo[$topic] + 1>>
+They listen intently, and seem impressed.
+<<set $reputation = $reputation + 2>>
+<</if>><br><br>
+
+[[Keep circulating | Circulating]]
+
+:: Asked to leave
+The footman demands to see your invitation. 
+Before you know it, you are firmly escorted through a back hallway, past the kitchens, and finally 
+out through the servant's entrance. A single guard glares at you, as of committing your face 
+to memory to make sure you'll never be able to come back.<br><br>
+
+FAILURE
+
+:: Invited to see the Duchess
+The footman discreetly bows his head under his high cap. "Her grace wishes to speak with you," he says. <br>
+You follow him as he leads you away from the main hall, and toward the Duchess's private rooms. <br><br>
+
+VICTORY

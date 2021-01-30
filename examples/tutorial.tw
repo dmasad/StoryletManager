@@ -9,6 +9,7 @@ At the Duchess's Party
 :: Story JavaScript [script]
 Config.passages.nobr = true; // Deal with linebreaks.
 
+State.variables.reputation = 0;
 State.variables.playerKnowledge = {poetry: 0, industry: 0, astronomy: 0};
 
 State.variables.characters = [

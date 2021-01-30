@@ -287,32 +287,110 @@ And we'll create the corresponding storylet passage, which will also implement t
 [[Keep circulating | Start]]
 ```
 
+## Finishing touches
 
+So far we've covered all of StoryManager's core features. But let's go ahead and add some final details to our game. StoryManager is most useful when your game contains more data or logic implemented in straight JavaScript. Three people isn't very many at a party -- but more starts getting tiring to create by hand. Let's implement some simple procedural generation to populate our party. While we're at it, let's add some actual text content to the dialog topics. Finally, just as the protagonist gains knowledge from conversation, let's make sure NPC knowledge goes up too -- to make sure the player can't grind up their reputation by sharing the same fact with the same person over and over.
 
+Note: As you start writing more JavaScript for your game, it might be worth it to split it off into its own `.js` file, to take advantage of syntax checking that text editors like VSCode or Sublime Text provide. Tweego can merge multiple JavaScript files together into your final Twee file.
 
+Below is some simple code to generate some NPCs to populate the party. It makes sure there's one at each knowledge level per topic, to give the player an opportunity to explore all the conversation topics in full.
 
+```javascript
+// Choose one of an array
+var randomChoice = function(vals) {
+	return vals[Math.floor(Math.random() * vals.length)];
+};
 
-### Adding content
+// Names to draw from
+let firstNames = ["Arabella", "Bianca", "Carlos", "Dorian", "Ellery", "Fra.",
+                  "Gregory", "Harlowe", "Irina", "Xavier", "Yskander", "Zenia"];
+let lastNames = ["Archer", "Brookhaven", "Croix", "Delamer", "Evermoore", 
+                 "Fitzparn", "Sutch", "Tremont", "Ulianov", "Van Otten"];
 
-Let's create these topics:
+State.variables.characters = [];
+// Generate one character with knowledge 1-3 per topic
+let id = 0;
+for (let topic in State.variables.playerKnowledge) {
+  for (let i=1; i<=3; i++) {
+    let firstName = randomChoice(firstNames);
+    let lastName = randomChoice(lastNames);
+    let char = {id: id, name: firstName + " " + lastName,
+                poetry: 0, industry: 0, astronomy: 0};
+    char[topic] = i;
+    State.variables.characters.push(char);
+    id++;
+  }
+}
+```
+To populate the conversations, we can also create some text to go along with each knowledge level:
 
 ```javascript
 State.variables.conversationTopics = {
-    "Poetry": [ "the new book of praise verse by Miss Causewell",
-                "the recitations at Madame Bautan's salon",
-                "Miss Causewell's previous volume, which was banned by the Censor."],
-    "Industry": ["the engine factory that recently opened by the Long Bridge.",
-                 "the new railway line being proposed to Draundle.",
-                 "the explosion at the shipyards."],
-    "Astronomy": ["the new red star in the night sky.", 
-                  "the latest theories about the star from Imperial University.",
-                  "Professor Hix, the court astronomer, has not been seen in some time."]
+  "poetry": [ "the new book of praise verse by Miss Causewell",
+              "the recitations at Madame Bautan's salon",
+              "Miss Causewell's previous volume, which was banned by the Censor"],
+  "industry": ["the engine factory that recently opened by the Long Bridge",
+               "the new railway line being proposed to Draundle",
+               "the explosion at the shipyards"],
+  "astronomy": ["the new red star in the night sky", 
+                "the latest theories about the star from Imperial University",
+                "how Professor Hix, the court astronomer, has not been seen in some time"]
 }
 ```
 
-We'll probably also want more than three characters, to give the player enough people to converse with. Instead of writing them all by hand, now would be a good time to add some simple procedural generation. 
-
-```javascript
-firstNames
+Then we also tweak the `:: Conversation topic` passage, to print the topic text as needed, and to increment the NPCs' knowledge.
 
 ```
+:: Conversation topic
+<<set $topic = $currentStorylet.topic>>
+<<if $playerKnowledge[$topic] < $talkingTo[$topic] >>
+$talkingTo.name tells you about <<print $conversationTopics[$topic][$playerKnowledge[$topic]]>>.
+<<set $playerKnowledge[$topic] = $playerKnowledge[$topic] + 1>>
+<<set $reputation = $reputation - 0.5>>
+<<elseif $playerKnowledge[$topic] == $talkingTo[$topic]>>
+You and $talkingTo.name discuss <<print $conversationTopics[$topic][$playerKnowledge[$topic]]>>.
+<<set $reputation = $reputation + 1>>
+<<elseif $playerKnowledge[$topic] > $talkingTo[$topic]>>
+You tell $talkingTo.name about <<print $conversationTopics[$topic][$talkingTo[$topic]]>>. 
+<<set $characters[$talkingTo.id][$topic] = $talkingTo[$topic] + 1>>
+They listen intently, and seem impressed.
+<<set $reputation = $reputation + 2>>
+<</if>><br><br>
+```
+
+Notice that we added some reputation effects: being ignorant makes your reputation go down a bit; knowing things makes it go up. In the full source, we also updated the decision to `Snub` someone by having it lower your reputation. 
+
+Finally, we can add two new storylets: a failure condition for if your reputation goes too low, and a success condition when it gets high enough.
+
+```javascript
+
+StoryManager.storylets["Asked to leave"] = {
+  name: "Asked to leave",
+  tags: ["circulating"],
+  generate: function() {
+      if (State.variables.reputation < -1 && Math.random() < 0.5) {
+          return [{
+              passage: "Asked to leave",
+              description: "You see a footman approaching you.",
+              interrupt: true
+          }]
+      }
+  }
+};
+
+StoryManager.storylets["Seeing the duchess"] = {
+  name: "Seeing the duchess",
+  tags: ["circulating"],
+  generate: function() {
+      if (State.variables.reputation > 6 && Math.random() < 0.5) {
+          return [{
+              passage: "Invited to see the Duchess",
+              description: "You see a footman approaching you.",
+              interrupt: true
+          }]
+      }
+  }
+};
+```
+
+And that's it! 
