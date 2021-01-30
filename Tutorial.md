@@ -205,13 +205,27 @@ We'll create three topics of conversation, each of which has three levels of kno
 
 To use storylets for conversation topics as well, we're now going to want two kinds of storylets that are accessible in different contexts: one for starting conversations with other characters; the other for conversation topics. One option is to add a state variable that's set when a conversation starts and cleared when it ends, and have the "Conversation" and "Buttonholed" storylet generators check them. But a simpler option is to give each type of storylet a **tag**, and then in the appropriate context only generate storylets with the tag appropriate for that context.
 
-We'll create two tags: `"circulating"` for things that can happen while the protagonist is circulating in the party, and `"during conversation"` for things that can happen while- well you get it.
+We'll create two tags: `"circulating"` for things that can happen while the protagonist is circulating in the party, and `"during conversation"` for things that can happen while- well you get it. First we'll update the two existing storylets:
+
+```javascript
+StoryManager.storylets["Conversation"] = {
+    name: "Conversation",
+    tags: ["circulating"],
+    // ... etc
+}
+
+StoryManager.storylets["Buttonholed"] = {
+    name: "Buttonholed",
+    tags: ["circulating"],
+    // ...etc
+}
+```
 
 We also need to update our world model to account for this mechanic: we need to track the protagonist's knowledge, and update the characters to account for their favorite topics and level of knowledge. 
 
 ```javascript
-State.variables.player_knowledge = {poetry: 0, industry: 0, astronomy: 0};
-
+State.variables.playerKnowledge = {poetry: 0, industry: 0, astronomy: 0};
+State.variables.reputation = 0;
 // For initial testing purposes, let's make each one an expert in a different topic
 
 State.variables.characters = [
@@ -220,7 +234,7 @@ State.variables.characters = [
         poetry: 3, industry: 0, astronomy: 0
     },
     {
-        name: "Blake Brookhaven"
+        name: "Blake Brookhaven",
         poetry: 0, industry: 3, astronomy: 0
     },
     {
@@ -228,8 +242,53 @@ State.variables.characters = [
         poetry: 0, industry: 0, astronomy: 3
     }
 ]
+```
+
+Finally, we can create the new storylet that checks if either the protagonist or their conversation partner knows anything about a topic:
+
+```javascript
+StoryManager.storylets["Conversation topic"] = {
+    name: "Conversation topic",
+    tags: ["during conversation"],
+    generate: function() {
+        let storylets = [];
+        for (let topic in State.variables.playerKnowledge) {
+            if (State.variables.playerKnowledge[topic] > 0 |
+                State.variables.talkingTo[topic] > 0)
+                storylets.push({
+                    passage: "Conversation topic",
+                    description: "Talk about " + topic,
+                    priority: 0,
+                    topic: topic
+                })
+        }
+        return storylets;
+    }
+};
+```
+(Notice that the `generate` function here assumes that there's already a character assigned to `$talkingTo`)
+
+And we'll create the corresponding storylet passage, which will also implement the game logic:
 
 ```
+:: Conversation topic
+<<set $topic = $currentStorylet.topic>>
+<<if $playerKnowledge[$topic] < $talkingTo[$topic] >>
+<<set $playerKnowledge[$topic] = $playerKnowledge[$topic] + 1>>
+(They tell you about $topic) (Knowledge of $topic goes up)
+<<elseif $playerKnowledge[$topic] == $talkingTo[$topic]>>
+(You discuss $topic) (reputation goes up slightly)
+<<set $reputation = $reputation + 1>>
+<<elseif $playerKnowledge[$topic] > $talkingTo[$topic]>>
+(You tell them about $topic) (reputation goes up)
+<<set $reputation = $reputation + 2>>
+<</if>><br><br>
+
+[[Keep circulating | Start]]
+```
+
+
+
 
 
 

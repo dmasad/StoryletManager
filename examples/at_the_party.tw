@@ -69,7 +69,7 @@ StoryManager.storylets["Conversation topic"] = {
         let storylets = [];
         for (let topic in State.variables.playerKnowledge) {
             if (State.variables.playerKnowledge[topic] > 0 |
-                State.variables.currentStorylet.character[topic] > 0)
+                State.variables.talkingTo[topic] > 0)
                 storylets.push({
                     passage: "Conversation topic",
                     description: "Talk about " + topic,
@@ -101,3 +101,15 @@ You can [[talk to them | Conversation]], or risk snubbing them by [[trying to ge
 
 :: Conversation topic
 <<set $topic = $currentStorylet.topic>>
+<<if $playerKnowledge[$topic] < $talkingTo[$topic] >>
+<<set $playerKnowledge[$topic] = $playerKnowledge[$topic] + 1>>
+(They tell you about $topic) (Knowledge of $topic goes up)
+<<elseif $playerKnowledge[$topic] == $talkingTo[$topic]>>
+(You discuss $topic) (reputation goes up slightly)
+<<set $reputation = $reputation + 1>>
+<<elseif $playerKnowledge[$topic] > $talkingTo[$topic]>>
+(You tell them about $topic) (reputation goes up)
+<<set $reputation = $reputation + 2>>
+<</if>><br><br>
+
+[[Keep circulating | Start]]
