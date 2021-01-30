@@ -286,6 +286,8 @@ And we'll create the corresponding storylet passage, which will also implement t
 [[Keep circulating | Start]]
 ```
 
+You can view the full code in [examples\tutorial.tw](https://github.com/dmasad/StoryletManager/blob/main/examples/tutorial.tw) or [play it online]().
+
 ## Finishing touches
 
 So far we've covered all of StoryManager's core features. But let's go ahead and add some final details to our game. StoryManager is most useful when your game contains more data or logic implemented in straight JavaScript. Three people isn't very many at a party -- but more starts getting tiring to create by hand. Let's implement some simple procedural generation to populate our party. While we're at it, let's add some actual text content to the dialog topics. Finally, just as the protagonist gains knowledge from conversation, let's make sure NPC knowledge goes up too -- to make sure the player can't grind up their reputation by sharing the same fact with the same person over and over.
