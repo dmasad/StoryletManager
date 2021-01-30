@@ -286,7 +286,7 @@ And we'll create the corresponding storylet passage, which will also implement t
 [[Keep circulating | Start]]
 ```
 
-You can view the full code in [examples\tutorial.tw](https://github.com/dmasad/StoryletManager/blob/main/examples/tutorial.tw) or [play it online]().
+You can view the full code in [examples\tutorial.tw](https://github.com/dmasad/StoryletManager/blob/main/examples/tutorial.tw) or [play it online](https://dmasad.github.io/StoryletManager/examples/tutorial.html).
 
 ## Finishing touches
 
@@ -399,4 +399,4 @@ And that's it! You can compile the final game (such as it is) with
 ```
 > tweego storymanager.js storymanager-widgets.tw examples\duchess_party.js examples\duchess_party.tw -o examples\duchess_party.html
 ```
-You can view the full code in the [examples folder](https://github.com/dmasad/StoryletManager/tree/main/examples) or [try playing it]().
+You can view the full code in the [examples folder](https://github.com/dmasad/StoryletManager/tree/main/examples) or [try playing it](https://dmasad.github.io/StoryletManager/examples/duchess_party.html).

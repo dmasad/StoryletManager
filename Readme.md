@@ -60,7 +60,9 @@ You prep your ship to jump.
 
 (This example uses the `<<ShowStoryletLinks>>` widget from `storymanager-widgets.tw`)
 
-You can see this complete example in the `examples\` folder ([twee]() or [playable HTML]()).
+You can see this complete example in the `examples\` folder ([twee](https://github.com/dmasad/StoryletManager/blob/main/examples/tutorial.tw) or [playable HTML](https://dmasad.github.io/StoryletManager/examples/simple_space_example.html)).
+
+There's also a [more detailed tutorial](https://github.com/dmasad/StoryletManager/blob/main/docs/Tutorial.md)
 
 ### What is a parameterized storylet?
 Storylets are pieces of content for a story or game that become available based on some combination of the current state, player choice, and random chance. Parameterized storylets are storylets where some details are intended to be filled in with data from the current story state or some underlying world model. For example, your game might have different characters in different locations, each with a different piece of information to share. You can create a single dialog parameterized storylet, with the character as a parameter. Using StoryManager (or, frankly, your own storylet system) your game could look up which characters are present at the game's current location and offer one dialog storylet for each. 
@@ -70,7 +72,7 @@ There are a bunch of great resources for learning more about storylets in genera
 ### Why another storylet manager?
 If you want to do storylets in Twine and Sugarcube, you should first check out [Tiny-QBN](https://github.com/JoshuaGrams/tiny-qbn), which is more mature than this one and requires much less messing around with JavaScript. As of version 3.2.0, the Harlowe story format also has [storylets as a first-class feature](https://twine2.neocities.org/#macro_storylet). 
 
-I have a few Twine hobby projects in various stage of completion, and I found myself implementing world-models and procedural generation in JavaScript and trying to tie them to passages. Instead of writing ad-hoc systems per game, I decided to try and make one unified storylet manager -- hence this project. The JavaScript that goes into the StoryManager tool itself is pretty simple (seriously, [look at it]()), but I'm hoping someone else might find this useful too.   
+I have a few Twine hobby projects in various stage of completion, and I found myself implementing world-models and procedural generation in JavaScript and trying to tie them to passages. Instead of writing ad-hoc systems per game, I decided to try and make one unified storylet manager -- hence this project. The JavaScript that goes into the StoryManager tool itself is pretty simple (seriously, [look at it](https://github.com/dmasad/StoryletManager/blob/main/storymanager.js)), but I'm hoping someone else might find this useful too.   
 
 ## Feature list
 
