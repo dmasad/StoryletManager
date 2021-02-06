@@ -12,7 +12,7 @@ StoryManager.getAllStorylets = function(tag=null) {
 		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
 			for (let boundStorylet of storylet.generate()) {
 				//boundStorylet = storylets[i];
-				if (!("priority" in boundStorylet)) boundStorylet.priority = 0;
+				if (!("priority" in boundStorylet)) boundStorylet.priority = 1;
 				allStorylets.push(boundStorylet); 
 			}
 		}
@@ -27,9 +27,6 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 		n: if not null, return at most n storylets
 		tag: Only get storylets matching this tag
 		respect_interrupt: if true, any interrupt storylet overrides n and priority
-
-		For now assume that priorities are integers, but it would be nice
-		to be more flexible.
 
 	*/
 	let allStorylets;
@@ -50,16 +47,18 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	}
 	else n = allStorylets.length;
 	let selectedStorylets = [];
-	// First sort by ascending priority:
-	allStorylets.sort((a, b) => b.priority - a.priority);
 
-	let currentPriority = allStorylets[0].priority;
+	// Select by strict priority; randomize among matching priority.
+	let priorities = Array.from(new Set(allStorylets.map(x => x.priority)));
+	priorities.sort((a, b) => b - a);
+
+	let currentPriority = 0;
 	while (selectedStorylets.length < n) {
-		let priorityStorylets = allStorylets.filter(s => s.priority==currentPriority);
+		let priorityStorylets = allStorylets.filter(s => s.priority==priorities[currentPriority]);
 		priorityStorylets.sort((a, b) => (Math.random() - Math.random()));
 		let nAdd = Math.min(n - selectedStorylets.length, priorityStorylets.length);
 		for (let i=0; i<nAdd; i++) selectedStorylets.push(priorityStorylets.pop());
-		currentPriority--;
+		currentPriority++;
 	}
 	return selectedStorylets;
 }

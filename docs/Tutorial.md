@@ -49,7 +49,7 @@ StoryManager.storylets["Conversation"] = {
                 passage: "Conversation",
                 description: "Talk to " + character.name,
                 character: character,
-                priority: 0
+                priority: 1
             }
             yield storylet;
         }
@@ -119,7 +119,7 @@ StoryManager.storylets["Conversation"] = {
             let storylet = {
                 passage: "Conversation",
                 description: "Talk to " + character.name,
-                priority: 0,
+                priority: 1,
                 character: character
                 
             }
@@ -254,7 +254,7 @@ StoryManager.storylets["Conversation topic"] = {
                 yield {
                     passage: "Conversation topic",
                     description: "Talk about " + topic,
-                    priority: 0,
+                    priority: 1,
                     topic: topic
                 };
         }

@@ -113,11 +113,9 @@ StoryManager.getAllStorylets = function(tag=null) {
 	for (let key in this.storylets) {
 		storylet = this.storylets[key];
 		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
-			// TODO: If using yield, this part will change
-			//storylets = storylet.generate();
 			for (let boundStorylet of storylet.generate()) {
 				//boundStorylet = storylets[i];
-				if (!("priority" in boundStorylet)) boundStorylet.priority = 0;
+				if (!("priority" in boundStorylet)) boundStorylet.priority = 1;
 				allStorylets.push(boundStorylet); 
 			}
 		}
@@ -132,9 +130,6 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 		n: if not null, return at most n storylets
 		tag: Only get storylets matching this tag
 		respect_interrupt: if true, any interrupt storylet overrides n and priority
-
-		For now assume that priorities are integers, but it would be nice
-		to be more flexible.
 
 	*/
 	let allStorylets;
@@ -155,16 +150,18 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	}
 	else n = allStorylets.length;
 	let selectedStorylets = [];
-	// First sort by ascending priority:
-	allStorylets.sort((a, b) => b.priority - a.priority);
 
-	let currentPriority = allStorylets[0].priority;
+	// Select by strict priority; randomize among matching priority.
+	let priorities = Array.from(new Set(allStorylets.map(x => x.priority)));
+	priorities.sort((a, b) => b - a);
+
+	let currentPriority = 0;
 	while (selectedStorylets.length < n) {
-		let priorityStorylets = allStorylets.filter(s => s.priority==currentPriority);
+		let priorityStorylets = allStorylets.filter(s => s.priority==priorities[currentPriority]);
 		priorityStorylets.sort((a, b) => (Math.random() - Math.random()));
 		let nAdd = Math.min(n - selectedStorylets.length, priorityStorylets.length);
 		for (let i=0; i<nAdd; i++) selectedStorylets.push(priorityStorylets.pop());
-		currentPriority--;
+		currentPriority++;
 	}
 	return selectedStorylets;
 }
@@ -228,7 +225,7 @@ StoryManager.storylets["Conversation"] = {
             let storylet = {
                 passage: "Conversation",
                 description: "Talk to " + character.name,
-                priority: 0,
+                priority: 1,
                 character: character
                 
             }
@@ -264,7 +261,7 @@ StoryManager.storylets["Conversation topic"] = {
                 storylets.push({
                     passage: "Conversation topic",
                     description: "Talk about " + topic,
-                    priority: 0,
+                    priority: 1,
                     topic: topic
                 })
         }
