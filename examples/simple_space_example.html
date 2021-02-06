@@ -114,11 +114,11 @@ StoryManager.getAllStorylets = function(tag=null) {
 		storylet = this.storylets[key];
 		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
 			// TODO: If using yield, this part will change
-			storylets = storylet.generate();
-			for (let i in storylets) {
-				boundStorylet = storylets[i];
+			//storylets = storylet.generate();
+			for (let boundStorylet of storylet.generate()) {
+				//boundStorylet = storylets[i];
 				if (!("priority" in boundStorylet)) boundStorylet.priority = 0;
-				allStorylets.push(storylets[i]); 
+				allStorylets.push(boundStorylet); 
 			}
 		}
 	}
@@ -171,14 +171,15 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 
 window.SM = StoryManager;
 /* twine-user-script #2: "Story JavaScript" */
+Config.passages.nobr = true; // No unspecified linebreaks.
+
 State.variables.locations = ["Earth", "Mars", "Ganymede"]; 
 State.variables.currentLocation = "Deep space";
 
 StoryManager.storylets["Go somewhere"] = {
     name: "Go somewhere",
     tags: ["in space"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let loc of State.variables.locations) {
             if (loc == State.variables.currentLocation) continue;
             let storylet = {
@@ -186,9 +187,8 @@ StoryManager.storylets["Go somewhere"] = {
                 description: "Jump to " + loc, // Storylet link text
                 planet: loc // Data associated with this storylet
             };
-            storylets.push(storylet);
+            yield storylet;
         }
-        return storylets;
     }
 }</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
     &lt;&lt;for _storylet range $args[0]&gt;&gt;

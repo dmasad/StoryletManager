@@ -36,14 +36,13 @@ State.variables.characters = [
 ]
 ```
 
-Finally, we'll create the storylet generator. This is a function returning the list of potential storylets. In this case there should be three: one conversation per character. This also goes in the story-level JavaScript.
+Finally, we'll create the storylet generator. This is a generator function yielding potential storylets. In this case there should be three: one conversation per character. This also goes in the story-level JavaScript.
 
 ```javascript
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: [],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let i in State.variables.characters) {
             let character = State.variables.characters[i];
             let storylet = {
@@ -52,9 +51,8 @@ StoryManager.storylets["Conversation"] = {
                 character: character,
                 priority: 0
             }
-            storylets.push(storylet);
+            yield storylet;
         }
-        return storylets;
     }
 };
 ```
@@ -160,15 +158,15 @@ Let's have a 20% chance of another random guest coming up and talking to the pla
 StoryManager.storylets["Buttonholed"] = {
     name: "Buttonholed",
     tags: [],
-    generate: function() {
+    generate: function*() {
         if (Math.random() < 0.2) {
             let char = randomChoice(State.variables.characters);
-            return [{
+            yield {
                 passage: "Being approached",
                 description: "You see " + char.name + " approaching you.",
                 interrupt: true,
                 character: char
-            }]
+            };
         }
     }
 }
@@ -249,19 +247,17 @@ Finally, we can create the new storylet that checks if either the protagonist or
 StoryManager.storylets["Conversation topic"] = {
     name: "Conversation topic",
     tags: ["during conversation"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let topic in State.variables.playerKnowledge) {
             if (State.variables.playerKnowledge[topic] > 0 |
                 State.variables.talkingTo[topic] > 0)
-                storylets.push({
+                yield {
                     passage: "Conversation topic",
                     description: "Talk about " + topic,
                     priority: 0,
                     topic: topic
-                })
+                };
         }
-        return storylets;
     }
 };
 ```
@@ -368,13 +364,13 @@ Finally, we can add two new storylets: a failure condition for if your reputatio
 StoryManager.storylets["Asked to leave"] = {
   name: "Asked to leave",
   tags: ["circulating"],
-  generate: function() {
+  generate: function*() {
       if (State.variables.reputation < -1 && Math.random() < 0.5) {
-          return [{
+          yield {
               passage: "Asked to leave",
               description: "You see a footman approaching you.",
               interrupt: true
-          }]
+          };
       }
   }
 };
@@ -382,13 +378,13 @@ StoryManager.storylets["Asked to leave"] = {
 StoryManager.storylets["Seeing the duchess"] = {
   name: "Seeing the duchess",
   tags: ["circulating"],
-  generate: function() {
+  generate: function*() {
       if (State.variables.reputation > 6 && Math.random() < 0.5) {
-          return [{
+          yield {
               passage: "Invited to see the Duchess",
               description: "You see a footman approaching you.",
               interrupt: true
-          }]
+          };
       }
   }
 };

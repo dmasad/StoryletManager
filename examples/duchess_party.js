@@ -49,8 +49,7 @@ State.variables.conversationTopics = {
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: ["circulating"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let i in State.variables.characters) {
             let character = State.variables.characters[i];
             let storylet = {
@@ -60,24 +59,23 @@ StoryManager.storylets["Conversation"] = {
                 character: character
                 
             }
-            storylets.push(storylet);
+            yield storylet;
         }
-        return storylets;
     }
 };
 
 StoryManager.storylets["Buttonholed"] = {
     name: "Buttonholed",
     tags: ["circulating"],
-    generate: function() {
+    generate: function*() {
         if (Math.random() < 0.2) {
             let char = randomChoice(State.variables.characters);
-            return [{
+            yield {
                 passage: "Being approached",
                 description: "You see " + char.name + " approaching you.",
                 interrupt: true,
                 character: char
-            }]
+            };
         }
     }
 };
@@ -104,13 +102,14 @@ StoryManager.storylets["Conversation topic"] = {
 StoryManager.storylets["Asked to leave"] = {
   name: "Asked to leave",
   tags: ["circulating"],
-  generate: function() {
+  generate: function*
+  () {
       if (State.variables.reputation < -1 && Math.random() < 0.5) {
-          return [{
+          yield {
               passage: "Asked to leave",
               description: "You see a footman approaching you.",
               interrupt: true
-          }]
+          };
       }
   }
 };
@@ -118,13 +117,13 @@ StoryManager.storylets["Asked to leave"] = {
 StoryManager.storylets["Seeing the duchess"] = {
   name: "Seeing the duchess",
   tags: ["circulating"],
-  generate: function() {
+  generate: function*() {
       if (State.variables.reputation > 6 && Math.random() < 0.5) {
-          return [{
+          yield {
               passage: "Invited to see the Duchess",
               description: "You see a footman approaching you.",
               interrupt: true
-          }]
+          }
       }
   }
 };

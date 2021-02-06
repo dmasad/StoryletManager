@@ -102,11 +102,6 @@ var saveAs=saveAs||navigator.msSaveBlob&&navigator.msSaveBlob.bind(navigator)||f
 	</div>
 	<!-- UUID://BE18C022-A213-466C-8DD1-DCCD5CB1DF48// --><tw-storydata name="At the Duchess&#39;s Party" startnode="2" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="BE18C022-A213-466C-8DD1-DCCD5CB1DF48" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
 
-// Choose one of an array
-var randomChoice = function(vals) {
-	return vals[Math.floor(Math.random() * vals.length)];
-};
-
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
 var StoryManager = {};
@@ -114,11 +109,17 @@ StoryManager.storylets = {};
 
 StoryManager.getAllStorylets = function(tag=null) {
 	let allStorylets = [];
+	let storylet, storylets, boundStorylet;
 	for (let key in this.storylets) {
-		let storylet = this.storylets[key];
+		storylet = this.storylets[key];
 		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
-			let storylets = storylet.generate();
-			for (let i in storylets) allStorylets.push(storylets[i]); 
+			// TODO: If using yield, this part will change
+			//storylets = storylet.generate();
+			for (let boundStorylet of storylet.generate()) {
+				//boundStorylet = storylets[i];
+				if (!("priority" in boundStorylet)) boundStorylet.priority = 0;
+				allStorylets.push(boundStorylet); 
+			}
 		}
 	}
 	return allStorylets;
@@ -193,8 +194,7 @@ State.variables.characters = [
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: ["circulating"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let i in State.variables.characters) {
             let character = State.variables.characters[i];
             let storylet = {
@@ -204,24 +204,23 @@ StoryManager.storylets["Conversation"] = {
                 character: character
                 
             }
-            storylets.push(storylet);
+            yield storylet
         }
-        return storylets;
     }
 };
 
 StoryManager.storylets["Buttonholed"] = {
     name: "Buttonholed",
     tags: ["circulating"],
-    generate: function() {
+    generate: function*() {
         if (Math.random() < 0.2) {
             let char = randomChoice(State.variables.characters);
-            return [{
+            yield {
                 passage: "Being approached",
                 description: "You see " + char.name + " approaching you.",
                 interrupt: true,
                 character: char
-            }]
+            };
         }
     }
 };
@@ -229,19 +228,18 @@ StoryManager.storylets["Buttonholed"] = {
 StoryManager.storylets["Conversation topic"] = {
     name: "Conversation topic",
     tags: ["during conversation"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
+        
         for (let topic in State.variables.playerKnowledge) {
             if (State.variables.playerKnowledge[topic] > 0 |
                 State.variables.talkingTo[topic] > 0)
-                storylets.push({
+                yield {
                     passage: "Conversation topic",
                     description: "Talk about " + topic,
                     priority: 0,
                     topic: topic
-                })
+                };
         }
-        return storylets;
     }
 };</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
     &lt;&lt;for _storylet range $args[0]&gt;&gt;

@@ -15,8 +15,7 @@ State.variables.currentLocation = "Deep space";
 StoryManager.storylets["Go somewhere"] = {
     name: "Go somewhere",
     tags: ["in space"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let loc of State.variables.locations) {
             if (loc == State.variables.currentLocation) continue;
             let storylet = {
@@ -24,9 +23,8 @@ StoryManager.storylets["Go somewhere"] = {
                 description: "Jump to " + loc, // Storylet link text
                 planet: loc // Data associated with this storylet
             };
-            storylets.push(storylet);
+            yield storylet;
         }
-        return storylets;
     }
 }
 
