@@ -6,7 +6,7 @@ You can use it in the Twine interactive editor, but at the moment it's probably 
 
 ## How to use it
 
-Add `storymanager.js` (and optionally `storymanager-widgets.tw`) to your Twine project. In JavaScript, add some story data if needed, and then add a storylet with a name, some tags (optionally), and a generator function that returns a list of instantiated storylet objects, like this:
+Add `storymanager.js` (and optionally `storymanager-widgets.tw`) to your Twine project. In JavaScript, add some story data if needed, and then add a storylet with a name, some tags (optionally), and a `generate` generator function* that `yield`s one or more instantiated storylet objects, like this:
 
 ```javascript
 
@@ -16,8 +16,7 @@ State.variables.currentLocation = "Deep space";
 StoryManager.storylets["Go somewhere"] = {
     name: "Go somewhere",
     tags: ["in space"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let loc of State.variables.locations) {
             if (loc == State.variables.currentLocation) continue;
             // Below is the instantiated potential storylet object:
@@ -26,12 +25,13 @@ StoryManager.storylets["Go somewhere"] = {
                 description: "Jump to " + loc, // Storylet link text
                 planet: loc // Data associated with this storylet
             };
-            storylets.push(storylet);
+            yield storylet;
         }
-        return storylets;
     }
 }
 ```
+
+(If you're unfamiliar with the `yield` keyword, think of it as a way a function can return multiple values without needing to create and return an array. Just remember that a function that uses `yield` needs to be defined as `function*`)
 
 Then in Twine, write one or more passages associated with your storylet:
 
@@ -87,7 +87,7 @@ I have a few Twine hobby projects in various stage of completion, and I found my
 - [X] Widget for displaying storylet links
   - [ ] Make the widget into a macro
 - [ ] Weighted random choice
-- [ ] Explore replacing storylet generators returning arrays with the `yield` keyword? **Pro:** produces cleaner code; **Con:** requires users to understand `yield` and remember to use the function * notation.
+- [X] Explore replacing storylet generators returning arrays with the `yield` keyword? **Pro:** produces cleaner code; **Con:** requires users to understand `yield` and remember to use the function * notation.
 - [ ] Add storylet code to passages (as comments, a-la Tiny-QBN?)
 - [ ] CSS styling (probably to go with widgets/macros?)
 

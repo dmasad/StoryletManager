@@ -30,8 +30,7 @@ State.variables.characters = [
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: ["circulating"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let i in State.variables.characters) {
             let character = State.variables.characters[i];
             let storylet = {
@@ -41,24 +40,23 @@ StoryManager.storylets["Conversation"] = {
                 character: character
                 
             }
-            storylets.push(storylet);
+            yield storylet
         }
-        return storylets;
     }
 };
 
 StoryManager.storylets["Buttonholed"] = {
     name: "Buttonholed",
     tags: ["circulating"],
-    generate: function() {
+    generate: function*() {
         if (Math.random() < 0.2) {
             let char = randomChoice(State.variables.characters);
-            return [{
+            yield {
                 passage: "Being approached",
                 description: "You see " + char.name + " approaching you.",
                 interrupt: true,
                 character: char
-            }]
+            };
         }
     }
 };
@@ -66,19 +64,18 @@ StoryManager.storylets["Buttonholed"] = {
 StoryManager.storylets["Conversation topic"] = {
     name: "Conversation topic",
     tags: ["during conversation"],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
+        
         for (let topic in State.variables.playerKnowledge) {
             if (State.variables.playerKnowledge[topic] > 0 |
                 State.variables.talkingTo[topic] > 0)
-                storylets.push({
+                yield {
                     passage: "Conversation topic",
                     description: "Talk about " + topic,
                     priority: 0,
                     topic: topic
-                })
+                };
         }
-        return storylets;
     }
 };
 
