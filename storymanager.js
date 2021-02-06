@@ -10,8 +10,6 @@ StoryManager.getAllStorylets = function(tag=null) {
 	for (let key in this.storylets) {
 		storylet = this.storylets[key];
 		if (tag === null || ("tags" in storylet && storylet.tags.includes(tag))) {
-			// TODO: If using yield, this part will change
-			//storylets = storylet.generate();
 			for (let boundStorylet of storylet.generate()) {
 				//boundStorylet = storylets[i];
 				if (!("priority" in boundStorylet)) boundStorylet.priority = 0;
