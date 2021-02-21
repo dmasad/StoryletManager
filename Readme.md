@@ -6,7 +6,7 @@ You can use it in the Twine interactive editor, but at the moment it's probably 
 
 ## How to use it
 
-Add `storymanager.js` (and optionally `storymanager-widgets.tw`) to your Twine project. In JavaScript, add some story data if needed, and then add a storylet with a name, some tags (optionally), and a `generate` generator function* that `yield`s one or more instantiated storylet objects, like this:
+Add `storymanager.js` to your Twine project. In JavaScript, add some story data if needed, and then add a storylet with a name, some tags (optionally), and a `generate` generator function* that `yield`s one or more instantiated storylet objects, like this:
 
 ```javascript
 
@@ -54,8 +54,7 @@ And finally, you need to have a passage where you query for available storylets 
 :: Jump
 
 You prep your ship to jump.
-<<set _possibleStorylets = window.SM.getStorylets()>>
-<<ShowStoryletLinks _possibleStorylets>>
+<<getStoryletLinks>>
 ```
 
 (This example uses the `<<ShowStoryletLinks>>` widget from `storymanager-widgets.tw`)

@@ -85,7 +85,7 @@ You stand at the edge of the grand ballroom in the Duchess's palace.<br>
 <</for>>
 ```
 
-This creates one link per available storylet. Each link will have the storylet description as its text, link to the storylet's passage, and when selected will story the storylet's data in the `$currentStorylet` variable, so that the storylet passage itself can access it. This pattern is (expected to be) common enough that there's a widget for it: `<<ShowStoryletLinks>>`. (**TODO:** Make this a macro). We may also not want to show *all* the available storylets. When there are just three guests it isn't so bad, but if the party has five, or ten, or more NPCs, giving the player the entire list will get overwhelming fast. We can randomly choose a subset, to emulate how people randomly circulate during the party. Instead, maybe we want to choose only some number of storylets to display. We can do this by passing a number to `getStorylets`indicating the maximum number of storylets to get. Storylets are selected in order of priority, so that the list is filled with higher-priority storylets first.
+This creates one link per available storylet. Each link will have the storylet description as its text, link to the storylet's passage, and when selected will story the storylet's data in the `$currentStorylet` variable, so that the storylet passage itself can access it. This pattern is (expected to be) common enough that there's a macro for it: `<<getStoryletLinks>>`. We may also not want to show *all* the available storylets. When there are just three guests it isn't so bad, but if the party has five, or ten, or more NPCs, giving the player the entire list will get overwhelming fast. We can randomly choose a subset, to emulate how people randomly circulate during the party. Instead, maybe we want to choose only some number of storylets to display. We can do this by passing a number to `getStoryletLinks`indicating the maximum number of storylets to get. Storylets are selected in order of priority, so that the list is filled with higher-priority storylets first.
 
 #### Putting it all together
 
@@ -131,8 +131,7 @@ StoryManager.storylets["Conversation"] = {
 
 :: Start
 You stand at the edge of the grand ballroom in the Duchess's palace.<br>
-<<set _possibleStories = window.SM.getStorylets(3)>>
-<<ShowStoryletLinks _possibleStories>>
+<<getStoryletLinks 3>>
 
 
 :: Conversation
@@ -143,7 +142,7 @@ You make polite conversation with $talkingTo.name. <br>
 
 To compile this with Tweego, run:
 ```
-> tweego storymanager.js storymanager-widgets.tw examples\tutorial.tw -o tutorial.html
+> tweego storymanager.js examples\tutorial.tw -o tutorial.html
 ```
 
 ## Adding interruptions
