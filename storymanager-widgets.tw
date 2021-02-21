@@ -1,8 +1,0 @@
-:: StoryManager Widgets [widget]
-<<widget ShowStoryletLinks>>
-    <<for _storylet range $args[0]>>
-        <<capture _storylet>>
-        [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
-        <</capture>>
-    <</for>>
-<</widget>>
