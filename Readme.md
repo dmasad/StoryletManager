@@ -77,6 +77,7 @@ I have a few Twine hobby projects in various stage of completion, and I found my
 - [X] Filtering to N storylets based on priority
   - [X] Don't assume priority is an integer
 - [X] Allowing some storylets to interrupt and take priority
+- [ ] Add macro for single next storylet
 - [ ] Track storylet history (e.g. to prevent repetition)
   - [ ]  Storylets bound to specific data
   - [ ]  Storylet with any binding
