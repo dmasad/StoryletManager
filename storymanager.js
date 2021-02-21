@@ -63,4 +63,22 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	return selectedStorylets;
 }
 
+// Set up macros
+
+Macro.add("getStoryletLinks", {
+	handler: function() {
+		let n, tag;
+		[n=null, tag=null] = this.args;
+		State.temporary.nextStorylets = StoryManager.getStorylets(n, tag);
+		$(this.output).wiki(`
+		<<for _storylet range _nextStorylets>> \
+			<<capture _storylet>> \
+				[[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
+			<</capture>> \
+		<</for>> \
+		`);
+	}
+})
+
+
 window.SM = StoryManager;

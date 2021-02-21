@@ -100,7 +100,7 @@ var saveAs=saveAs||navigator.msSaveBlob&&navigator.msSaveBlob.bind(navigator)||f
 		<div id="init-lacking">Your browser lacks required capabilities. Please upgrade it or switch to another to continue.</div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://2EE3728E-B079-4539-9A9C-97CD8474B4C5// --><tw-storydata name="Simple Space Example" startnode="2" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="2EE3728E-B079-4539-9A9C-97CD8474B4C5" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
+	<!-- UUID://2EE3728E-B079-4539-9A9C-97CD8474B4C5// --><tw-storydata name="Simple Space Example" startnode="1" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="2EE3728E-B079-4539-9A9C-97CD8474B4C5" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
@@ -166,6 +166,24 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	return selectedStorylets;
 }
 
+// Set up macros
+
+Macro.add("getStoryletLinks", {
+	handler: function() {
+		let n, tag;
+		[n=null, tag=null] = this.args;
+		State.temporary.nextStorylets = StoryManager.getStorylets(n, tag);
+		$(this.output).wiki(`
+		<<for _storylet range _nextStorylets>>
+			<<capture _storylet>>
+				[[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
+			<</capture>>
+		<</for>>
+		`);
+	}
+})
+
+
 window.SM = StoryManager;
 /* twine-user-script #2: "Story JavaScript" */
 Config.passages.nobr = true; // No unspecified linebreaks.
@@ -187,18 +205,11 @@ StoryManager.storylets["Go somewhere"] = {
             yield storylet;
         }
     }
-}</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
-    &lt;&lt;for _storylet range $args[0]&gt;&gt;
-        &lt;&lt;capture _storylet&gt;&gt;
-        [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]&lt;br&gt;
-        &lt;&lt;/capture&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">You find yourself in $currentLocation. You should probably [[jump | Jump]].</tw-passagedata><tw-passagedata pid="3" name="Jump" tags="" position="350,100" size="100,100">You prep your ship to jump.
-&lt;&lt;set _possibleStorylets = window.SM.getStorylets()&gt;&gt;
-&lt;&lt;ShowStoryletLinks _possibleStorylets&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Orbit" tags="" position="475,100" size="100,100">&lt;&lt;set $currentLocation = $currentStorylet.planet&gt;&gt;
+}</script><tw-passagedata pid="1" name="Start" tags="" position="100,100" size="100,100">You find yourself in $currentLocation. You should probably [[jump | Jump]].</tw-passagedata><tw-passagedata pid="2" name="Jump" tags="" position="225,100" size="100,100">You prep your ship to jump.
+&lt;&lt;getStoryletLinks&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Orbit" tags="" position="350,100" size="100,100">&lt;&lt;set $currentLocation = $currentStorylet.planet&gt;&gt;
 You orbit around $currentLocation.
 
-[[Explore the surface]] or [[Jump]] somewhere else.</tw-passagedata><tw-passagedata pid="5" name="Explore the surface" tags="" position="600,100" size="100,100">You take your shuttle down to the surface of $currentLocation.
+[[Explore the surface]] or [[Jump]] somewhere else.</tw-passagedata><tw-passagedata pid="4" name="Explore the surface" tags="" position="475,100" size="100,100">You take your shuttle down to the surface of $currentLocation.
 
 Return to [[Orbit]]</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
