@@ -57,8 +57,6 @@ You prep your ship to jump.
 <<getStoryletLinks>>
 ```
 
-(This example uses the `<<ShowStoryletLinks>>` widget from `storymanager-widgets.tw`)
-
 You can see this complete example in the `examples\` folder ([twee](https://github.com/dmasad/StoryletManager/blob/main/examples/tutorial.tw) or [playable HTML](https://dmasad.github.io/StoryletManager/examples/simple_space_example.html)).
 
 There's also a [more detailed tutorial](https://github.com/dmasad/StoryletManager/blob/main/docs/Tutorial.md)
@@ -84,7 +82,7 @@ I have a few Twine hobby projects in various stage of completion, and I found my
   - [ ]  Storylet with any binding
 - [X] Storylet tagging and filtering (i.e. pull from only a subset of storylets)
 - [X] Widget for displaying storylet links
-  - [ ] Make the widget into a macro
+  - [X] Make the widget into a macro
 - [ ] Weighted random choice
 - [X] Explore replacing storylet generators returning arrays with the `yield` keyword? **Pro:** produces cleaner code; **Con:** requires users to understand `yield` and remember to use the function * notation.
 - [ ] Add storylet code to passages (as comments, a-la Tiny-QBN?)

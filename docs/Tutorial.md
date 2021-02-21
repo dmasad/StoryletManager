@@ -112,8 +112,7 @@ State.variables.characters = [
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
     tags: [],
-    generate: function() {
-        let storylets = [];
+    generate: function*() {
         for (let i in State.variables.characters) {
             let character = State.variables.characters[i];
             let storylet = {
@@ -123,9 +122,8 @@ StoryManager.storylets["Conversation"] = {
                 character: character
                 
             }
-            storylets.push(storylet);
+            yield storylet;
         }
-        return storylets;
     }
 };
 
@@ -216,8 +214,25 @@ StoryManager.storylets["Buttonholed"] = {
     // ...etc
 }
 ```
+Now we need to have the `getStoryletLinks` macro only look for storylets with matching tags. To specify a tag, add it in quotation marks after the number of storylets to get, like this:
 
-We also need to update our world model to account for this mechanic: we need to track the protagonist's knowledge, and update the characters to account for their favorite topics and level of knowledge. 
+```
+:: Start
+You stand at the edge of the grand ballroom in the Duchess's palace.<br>
+<<getStoryletLinks 3 "circulating">>
+```
+
+We'll also update the `Conversation` passage to look for `"during conversation"` storylets:
+
+```
+:: Conversation
+<<set $talkingTo = $currentStorylet.character>>
+You talk with $talkingTo.name. <br>
+<<getStoryletLinks 3 "during conversation">>
+[[Keep circulating | Start]]
+```
+
+Now we need to create the conversation-topic storylet generator. First we need to track the protagonist's knowledge, and update the characters to account for their favorite topics and level of knowledge. 
 
 ```javascript
 State.variables.playerKnowledge = {poetry: 0, industry: 0, astronomy: 0};
