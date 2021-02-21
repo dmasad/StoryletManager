@@ -34,8 +34,7 @@ You find yourself in $currentLocation. You should probably [[jump | Jump]].
 
 :: Jump
 You prep your ship to jump.
-<<set _possibleStorylets = window.SM.getStorylets()>>
-<<ShowStoryletLinks _possibleStorylets>>
+<<getStoryletLinks>>
 
 :: Orbit
 <<set $currentLocation = $currentStorylet.planet>>

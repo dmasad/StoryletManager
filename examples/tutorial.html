@@ -100,7 +100,7 @@ var saveAs=saveAs||navigator.msSaveBlob&&navigator.msSaveBlob.bind(navigator)||f
 		<div id="init-lacking">Your browser lacks required capabilities. Please upgrade it or switch to another to continue.</div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://BE18C022-A213-466C-8DD1-DCCD5CB1DF48// --><tw-storydata name="At the Duchess&#39;s Party" startnode="2" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="BE18C022-A213-466C-8DD1-DCCD5CB1DF48" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
+	<!-- UUID://BE18C022-A213-466C-8DD1-DCCD5CB1DF48// --><tw-storydata name="At the Duchess&#39;s Party" startnode="1" creator="Tweego" creator-version="2.1.0+9ea2fab" ifid="BE18C022-A213-466C-8DD1-DCCD5CB1DF48" zoom="1" format="SugarCube" format-version="2.30.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "storymanager.js" */
 
 // Set up the general narrative manager
 // -----------------------------------------------------------------------
@@ -166,6 +166,24 @@ StoryManager.getStorylets = function(n=null, tag=null, respect_interrupt=true) {
 	return selectedStorylets;
 }
 
+// Set up macros
+
+Macro.add("getStoryletLinks", {
+	handler: function() {
+		let n, tag;
+		[n=null, tag=null] = this.args;
+		State.temporary.nextStorylets = StoryManager.getStorylets(n, tag);
+		$(this.output).wiki(`
+		<<for _storylet range _nextStorylets>>
+			<<capture _storylet>>
+				[[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
+			<</capture>>
+		<</for>>
+		`);
+	}
+})
+
+
 window.SM = StoryManager;
 /* twine-user-script #2: "Story JavaScript" */
 Config.passages.nobr = true; // Deal with linebreaks.
@@ -187,6 +205,12 @@ State.variables.characters = [
         poetry: 0, industry: 0, astronomy: 3
     }
 ]
+
+// Choose one of an array
+var randomChoice = function(vals) {
+	return vals[Math.floor(Math.random() * vals.length)];
+};
+
 
 StoryManager.storylets["Conversation"] = {
     name: "Conversation",
@@ -238,20 +262,12 @@ StoryManager.storylets["Conversation topic"] = {
                 };
         }
     }
-};</script><tw-passagedata pid="1" name="StoryManager Widgets" tags="widget" position="100,100" size="100,100">&lt;&lt;widget ShowStoryletLinks&gt;&gt;
-    &lt;&lt;for _storylet range $args[0]&gt;&gt;
-        &lt;&lt;capture _storylet&gt;&gt;
-        [[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]&lt;br&gt;
-        &lt;&lt;/capture&gt;&gt;
-    &lt;&lt;/for&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">You stand at the edge of the grand ballroom in the Duchess&#39;s palace.&lt;br&gt;
-&lt;&lt;set _possibleStories = window.SM.getStorylets(3, &quot;circulating&quot;)&gt;&gt;
-&lt;&lt;ShowStoryletLinks _possibleStories&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Conversation" tags="" position="350,100" size="100,100">&lt;&lt;set $talkingTo = $currentStorylet.character&gt;&gt;
+};</script><tw-passagedata pid="1" name="Start" tags="" position="100,100" size="100,100">You stand at the edge of the grand ballroom in the Duchess&#39;s palace.&lt;br&gt;
+&lt;&lt;getStoryletLinks 3 &quot;circulating&quot;&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Conversation" tags="" position="225,100" size="100,100">&lt;&lt;set $talkingTo = $currentStorylet.character&gt;&gt;
 You talk with $talkingTo.name. &lt;br&gt;
-&lt;&lt;set _possibleStories = window.SM.getStorylets(3, &quot;during conversation&quot;)&gt;&gt;
-&lt;&lt;ShowStoryletLinks _possibleStories&gt;&gt;
-[[Keep circulating | Start]]</tw-passagedata><tw-passagedata pid="4" name="Being approached" tags="" position="475,100" size="100,100">$currentStorylet.character.name is coming toward you to talk. &lt;br&gt;
-You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].</tw-passagedata><tw-passagedata pid="5" name="Conversation topic" tags="" position="600,100" size="100,100">&lt;&lt;set $topic = $currentStorylet.topic&gt;&gt;
+&lt;&lt;getStoryletLinks 3 &quot;during conversation&quot;&gt;&gt;
+[[Keep circulating | Start]]</tw-passagedata><tw-passagedata pid="3" name="Being approached" tags="" position="350,100" size="100,100">$currentStorylet.character.name is coming toward you to talk. &lt;br&gt;
+You can [[talk to them | Conversation]], or risk snubbing them by [[trying to get away | Start]].</tw-passagedata><tw-passagedata pid="4" name="Conversation topic" tags="" position="475,100" size="100,100">&lt;&lt;set $topic = $currentStorylet.topic&gt;&gt;
 &lt;&lt;if $playerKnowledge[$topic] &lt; $talkingTo[$topic] &gt;&gt;
 &lt;&lt;set $playerKnowledge[$topic] = $playerKnowledge[$topic] + 1&gt;&gt;
 (They tell you about $topic) (Knowledge of $topic goes up)
