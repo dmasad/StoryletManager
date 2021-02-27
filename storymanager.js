@@ -21,7 +21,7 @@ StoryManager.getAllStorylets = function(tag=null) {
 }
 
 StoryManager.getStorylets = 
-	function(n=null, tag=null, selection="ordered", respect_interrupt=true) {
+	function(n=null, tag=null, selection="weighted", respect_interrupt=true) {
 	/* 
 		Get n storylets, prioritizing the highest-priority ones first.
 
@@ -53,7 +53,7 @@ StoryManager.getStorylets =
 		selectedStorylets = this.sortByPriority(allStorylets, n);
 	else if (selection == "weighted")
 		selectedStorylets = this.weightedRandom(allStorylets, n);
-		
+
 	return selectedStorylets;
 }
 
@@ -86,7 +86,7 @@ StoryManager.weightedRandom = function(allStorylets, n) {
 		rand = Math.random() * sum;
 		for (let i=0; i<allStorylets.length; i++) {
 			if (counter + allStorylets[i].priority)  {
-				selectedStorylets.push(allStorylets.splice(i, 1));
+				selectedStorylets.push(allStorylets.splice(i, 1)[0]);
 				break;
 			}
 			counter += allStorylets[i].priority;
