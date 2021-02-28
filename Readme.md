@@ -9,7 +9,6 @@ You can use it in the Twine interactive editor, but at the moment it's probably 
 Add `storymanager.js` to your Twine project. In JavaScript, add some story data if needed, and then add a storylet with a name, some tags (optionally), and a `generate` generator function* that `yield`s one or more instantiated storylet objects, like this:
 
 ```javascript
-
 State.variables.locations = ["Earth", "Mars", "Ganymede"]; 
 State.variables.currentLocation = "Deep space";
 
@@ -48,7 +47,7 @@ You take your shuttle down to the surface of $currentLocation.
 Return to [[Orbit]]
 ```
 
-And finally, you need to have a passage where you query for available storylets and display them:
+And finally, you need to have a passage where you query for available storylets and display them. You display available storylets as links using the `<<getStoryletLinks>>` macro
 
 ```
 :: Jump
@@ -57,7 +56,19 @@ You prep your ship to jump.
 <<getStoryletLinks>>
 ```
 
+This will add three Twine links: `Jump to Earth`, `Jump to Mars`, and `Jump to Ganymede`. Each one will lead to the `:: Orbit` passage, but with a different value assigned to `$currentStorylet.planet`. 
+
 You can see this complete example in the `examples\` folder ([twee](https://github.com/dmasad/StoryletManager/blob/main/examples/tutorial.tw) or [playable HTML](https://dmasad.github.io/StoryletManager/examples/simple_space_example.html)).
+
+In other cases you might want a single link that chooses the next storylet at random and takes the player there. You do that using the `<<linkToNextStorylet>>` macro:
+
+```
+:: Jump
+
+You prep your ship to jump. You can choose a destination:
+<<getStoryletLinks>>
+Or you can <<linkToNextStorylet "jump blind">>.
+```
 
 There's also a [more detailed tutorial](https://github.com/dmasad/StoryletManager/blob/main/docs/Tutorial.md)
 
