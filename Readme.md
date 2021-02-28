@@ -84,7 +84,7 @@ I have a few Twine hobby projects in various stage of completion, and I found my
 - [X] Storylet tagging and filtering (i.e. pull from only a subset of storylets)
 - [X] Widget for displaying storylet links
   - [X] Make the widget into a macro
-- [ ] Weighted random choice
+- [X] Weighted random choice
 - [X] Explore replacing storylet generators returning arrays with the `yield` keyword? **Pro:** produces cleaner code; **Con:** requires users to understand `yield` and remember to use the function * notation.
 - [ ] Add storylet code to passages (as comments, a-la Tiny-QBN?)
 - [ ] CSS styling (probably to go with widgets/macros?)

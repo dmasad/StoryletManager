@@ -33,8 +33,9 @@ StoryManager.storylets["Go somewhere"] = {
 You find yourself in $currentLocation. You should probably [[jump | Jump]].
 
 :: Jump
-You prep your ship to jump.
+You prep your ship to jump. You can choose a destination:<br>
 <<getStoryletLinks>>
+Or you can <<linkToNextStorylet "jump blind">>.
 
 :: Orbit
 <<set $currentLocation = $currentStorylet.planet>>

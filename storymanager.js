@@ -105,7 +105,7 @@ StoryManager.weightedRandom = function(allStorylets, n) {
 // ---------------------------------------------------------------
 Macro.add("getStoryletLinks", {
 	handler: function() {
-		let n, tag;
+		let n, tag, selection;
 		[n=null, tag=null, selection="ordered"] = this.args;
 		State.temporary.nextStorylets = StoryManager.getStorylets(n, tag, selection);
 		$(this.output).wiki(`\
@@ -114,7 +114,7 @@ Macro.add("getStoryletLinks", {
 				[[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
 			<</capture>> \
 		<</for>> \
-		`);
+		`)
 	}
 });
 
