@@ -1,0 +1,51 @@
+:: StoryTitle
+Simple progress example
+
+:: StoryData
+{
+    "ifid": "724F804D-9451-4347-BB4D-A0725429BC93"
+}
+
+:: Story JavaScript [script]
+Config.passages.nobr = true; // No unspecified linebreaks.
+
+let animals = ["moose", "fox", "toad"];
+State.variables.progress = 0;
+
+StoryManager.storylets["walk"]  = {
+    name: "Walking",
+    generate: function*() {
+        for (let animal of animals) {
+            yield {
+                passage: "Walking",
+                animal: animal,
+                priority: 1
+            }
+        }
+    }
+}
+
+StoryManager.storylets["end"] = {
+    name: "The End",
+    generate: function*() {
+        if (State.variables.progress > 3) {
+            yield {
+                passage: "End",
+                priority: 2
+            }
+        }
+    }
+}
+
+
+:: Start
+
+You <<linkToNextStorylet "start walking">> through the woods.
+
+:: Walking
+You walk deeper into the woods. You see a <<print $currentStorylet.animal>> <br>
+<<set $progress = $progress + 1>>
+<<linkToNextStorylet "Keep walking">>
+
+:: End
+You reach the end of the forest!

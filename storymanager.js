@@ -21,7 +21,7 @@ StoryManager.getAllStorylets = function(tag=null) {
 }
 
 StoryManager.getStorylets = 
-	function(n=null, tag=null, selection="weighted", respect_interrupt=true) {
+	function(n=null, tag=null, selection="ordered", respect_interrupt=true) {
 	/* 
 		Get n storylets, prioritizing the highest-priority ones first.
 
@@ -35,10 +35,14 @@ StoryManager.getStorylets =
 	
 
 	// Check for interruptions
-	// TODO: Handle more than one interruption
 	if (respect_interrupt) {
-		for (let i in allStorylets)
-			if (allStorylets[i].interrupt) return [allStorylets[i]];
+		let interruptions = [];
+		for (let storylet of allStorylets) 
+			if (storylet.interrupt) interruptions.push(storylet);
+		if (interruptions.length > 0) {
+			interruptions.sort((a, b) => b.priority - a.priority);
+			return [interruptions[0]];
+		}
 	}
 
 	// Return n or the max
@@ -85,7 +89,7 @@ StoryManager.weightedRandom = function(allStorylets, n) {
 		counter = 0;
 		rand = Math.random() * sum;
 		for (let i=0; i<allStorylets.length; i++) {
-			if (counter + allStorylets[i].priority)  {
+			if (counter + allStorylets[i].priority > rand)  {
 				selectedStorylets.push(allStorylets.splice(i, 1)[0]);
 				break;
 			}
@@ -102,9 +106,9 @@ StoryManager.weightedRandom = function(allStorylets, n) {
 Macro.add("getStoryletLinks", {
 	handler: function() {
 		let n, tag;
-		[n=null, tag=null] = this.args;
-		State.temporary.nextStorylets = StoryManager.getStorylets(n, tag);
-		$(this.output).wiki(`
+		[n=null, tag=null, selection="ordered"] = this.args;
+		State.temporary.nextStorylets = StoryManager.getStorylets(n, tag, selection);
+		$(this.output).wiki(`\
 		<<for _storylet range _nextStorylets>> \
 			<<capture _storylet>> \
 				[[_storylet.description|_storylet.passage][$currentStorylet=_storylet]]<br>
@@ -112,7 +116,15 @@ Macro.add("getStoryletLinks", {
 		<</for>> \
 		`);
 	}
-})
+});
 
+Macro.add("linkToNextStorylet", {
+	handler: function() {
+		let text, tag, selection;
+		[text, tag=null, selection="weighted"] = this.args;
+		State.temporary.nextStorylet = StoryManager.getStorylets(1, tag, selection)[0];
+		$(this.output).wiki(`<<capture _nextStorylet>>[[${text}|_nextStorylet.passage][$currentStorylet=_nextStorylet]]<</capture>>`);
+	}
+});
 
 window.SM = StoryManager;
